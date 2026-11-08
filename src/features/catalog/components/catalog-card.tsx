@@ -1,5 +1,7 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { CatalogItem } from "../types";
+import { getRankArtwork } from "../rank-artwork";
 import { formatRupiah } from "../../../lib/currency";
 
 function priceLabel(item: CatalogItem) {
@@ -21,11 +23,12 @@ function categoryLabel(item: CatalogItem) {
 
 export function CatalogCard({ item }: { item: CatalogItem }) {
   const oldPrice = originalPrice(item);
+  const artwork = getRankArtwork(item);
 
   return (
     <Link
       href={`/paket/${item.id}`}
-      className="group relative flex min-h-56 flex-col overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-[#1a1426] via-[#111019] to-[#0b0a10] p-5 transition duration-200 hover:-translate-y-1 hover:border-fuchsia-400/60 hover:shadow-[0_16px_50px_rgba(168,85,247,0.12)]"
+      className="group relative flex min-h-80 flex-col overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-[#1a1426] via-[#111019] to-[#0b0a10] p-5 transition duration-200 hover:-translate-y-1 hover:border-fuchsia-400/60 hover:shadow-[0_16px_50px_rgba(168,85,247,0.12)]"
     >
       <div className="absolute -right-12 -top-12 h-36 w-36 rounded-full bg-fuchsia-500/10 blur-3xl transition group-hover:bg-fuchsia-500/20" />
       <div className="relative flex items-start justify-between gap-3">
@@ -34,7 +37,18 @@ export function CatalogCard({ item }: { item: CatalogItem }) {
           <span className="rounded-full bg-fuchsia-500 px-2.5 py-1 text-[10px] font-bold text-white">BEST SELLER</span>
         ) : null}
       </div>
-      <h3 className="relative mt-5 text-lg font-bold text-white">{item.name}</h3>
+      {artwork ? (
+        <div className="relative mx-auto mt-3 flex h-36 w-full max-w-[220px] items-center justify-center sm:h-40">
+          <Image
+            src={artwork.src}
+            alt={artwork.alt}
+            width={220}
+            height={220}
+            className="h-full w-full object-contain drop-shadow-[0_8px_24px_rgba(168,85,247,0.16)]"
+          />
+        </div>
+      ) : null}
+      <h3 className="relative mt-3 text-lg font-bold text-white">{item.name}</h3>
       {item.category === "fixed-package" && item.description ? (
         <p className="relative mt-2 text-sm text-zinc-400">{item.description}</p>
       ) : null}
