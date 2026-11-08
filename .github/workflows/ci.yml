@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   quality:
-    name: Lint, typecheck, test, and build
+    name: Lint, typecheck, unit tests, and build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -21,9 +21,26 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
 
       - name: Install dependencies
         run: npm install
 
       - name: Run quality checks
         run: npm run check
+
+      - name: Start production server
+        run: |
+          npm run start > /tmp/credo-store-next.log 2>&1 &
+          echo $! > /tmp/credo-store-next.pid
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:3000 > /dev/null; then
+              exit 0
+            fi
+            sleep 2
+          done
+          cat /tmp/credo-store-next.log
+          exit 1
+
+      - name: Run production HTTP smoke tests
+        run: npm run test:e2e
