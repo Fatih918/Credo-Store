@@ -5,7 +5,15 @@ export const ADMIN_ROLES = [
   "viewer",
 ] as const;
 
-export type AdminRole = (typeof ADMIN_ROLES)[number];\n\nexport const ASSIGNABLE_ADMIN_ROLES = [\n  "admin",\n  "catalog_manager",\n  "viewer",\n] as const;\n\nexport type AssignableAdminRole = (typeof ASSIGNABLE_ADMIN_ROLES)[number];
+export type AdminRole = (typeof ADMIN_ROLES)[number];
+
+export const ASSIGNABLE_ADMIN_ROLES = [
+  "admin",
+  "catalog_manager",
+  "viewer",
+] as const;
+
+export type AssignableAdminRole = (typeof ASSIGNABLE_ADMIN_ROLES)[number];
 
 export const ADMIN_PERMISSIONS = [
   "dashboard:view",
@@ -31,7 +39,16 @@ export function isAdminRole(value: unknown): value is AdminRole {
   );
 }
 
-export function isAssignableAdminRole(\n  value: unknown,\n): value is AssignableAdminRole {\n  return (\n    typeof value === "string" &&\n    ASSIGNABLE_ADMIN_ROLES.some((role) => role === value)\n  );\n}\n\nexport function hasAdminPermission(
+export function isAssignableAdminRole(
+  value: unknown,
+): value is AssignableAdminRole {
+  return (
+    typeof value === "string" &&
+    ASSIGNABLE_ADMIN_ROLES.some((role) => role === value)
+  );
+}
+
+export function hasAdminPermission(
   role: AdminRole,
   permission: AdminPermission,
 ): boolean {
