@@ -166,8 +166,23 @@ as $$
 declare
   remaining_owners integer;
 begin
+  if tg_op = 'DELETE' then
+    if old.role = 'owner' and old.is_active = true then
+      select count(*) into remaining_owners
+      from public.admin_profiles
+      where role = 'owner'
+        and is_active = true
+        and user_id <> old.user_id;
+
+      if remaining_owners = 0 then
+        raise exception 'The last active owner cannot be removed or deactivated';
+      end if;
+    end if;
+    return old;
+  end if;
+
   if old.role = 'owner' and old.is_active = true
-     and (tg_op = 'DELETE' or new.role <> 'owner' or new.is_active = false) then
+     and (new.role <> 'owner' or new.is_active = false) then
     select count(*) into remaining_owners
     from public.admin_profiles
     where role = 'owner'
@@ -179,16 +194,9 @@ begin
     end if;
   end if;
 
-  if tg_op = 'DELETE' then
-    return old;
-  end if;
   return new;
 end;
 $$;
-
-create trigger admin_profiles_protect_last_owner
-before update or delete on public.admin_profiles
-for each row execute function public.prevent_last_owner_removal();
 
 create or replace function public.write_catalog_audit_log()
 returns trigger
@@ -206,7 +214,7 @@ begin
     entity_id_value := new.id;
     before_value := null;
     after_value := to_jsonb(new);
-    action_value := case when new.is_active then 'create' else 'create' end;
+    action_value := 'create';
   elsif tg_op = 'UPDATE' then
     entity_id_value := new.id;
     before_value := to_jsonb(old);
