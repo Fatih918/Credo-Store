@@ -1,9 +1,9 @@
 import { catalogItems } from "../catalog/data/catalog";
-import { formatRupiah } from "@/lib/currency";
+import { formatRupiah } from "../../lib/currency";
 import { hasOrderErrors, validateOrderDraft } from "./validation";
 import type { OrderDraft } from "./types";
 import type { OrderPriceSummary } from "./order-pricing";
-import { storeConfig } from "@/config/store";
+import { storeConfig } from "../../config/store";
 
 function appendOptionalLine(lines: string[], label: string, value: string) {
   const normalized = value.trim();
