@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { requirePermission } from "@/features/admin/auth/authorization";
-import { isAdminRole } from "@/features/admin/auth/permissions";
+import { isAssignableAdminRole } from "@/features/admin/auth/permissions";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 function readText(formData: FormData, key: string): string {
@@ -34,7 +34,7 @@ export async function inviteAdminAction(formData: FormData): Promise<void> {
   if (
     !validEmail(email) ||
     displayName.length > 100 ||
-    !isAdminRole(roleValue)
+    !isAssignableAdminRole(roleValue)
   ) {
     finish("invalid");
   }
@@ -90,7 +90,7 @@ export async function updateAdminRoleAction(
   const targetUserId = readText(formData, "userId");
   const roleValue = readText(formData, "role");
 
-  if (!targetUserId || !isAdminRole(roleValue) || targetUserId === actor.userId) {
+  if (!targetUserId || !isAssignableAdminRole(roleValue) || targetUserId === actor.userId) {
     finish("invalid");
   }
 
