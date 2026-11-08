@@ -1,17 +1,38 @@
-# Supabase database setup
+# Supabase database and application setup
 
 ## Scope
 
-The initial migration creates the catalog hierarchy, administrator profile metadata, audit history, row-level security policies, RBAC helper functions, and the approved catalog seed.
+The initial database migration creates the catalog hierarchy, administrator profile metadata, audit history, row-level security policies, RBAC helper functions, and the approved catalog seed.
 
-It does not enable the admin UI, Supabase Auth login, administrator invitations, or database-backed storefront reads yet. The current storefront continues to use its TypeScript catalog until the later parity-tested cutover.
+The application now has the basic Supabase SSR client plumbing:
+- Browser client for future Client Components.
+- Server client for Server Components, Server Actions, and Route Handlers.
+- Next.js 16 Proxy session refresh using Supabase Auth cookies and `auth.getClaims()`.
+- Runtime validation for the public Supabase URL and publishable key.
+
+This does not yet enable an admin login page, administrator provisioning/invitations, route authorization, dashboard CRUD, or database-backed storefront reads. The current storefront continues to use its TypeScript catalog.
 
 ## Prerequisites
 
-- A Supabase project.
-- Supabase CLI installed locally.
-- Docker available if running the local Supabase stack.
+- Node.js 22+ and npm.
+- A Supabase project for hosted integration.
+- Supabase CLI and Docker for local database validation.
 - A copy of the repository.
+
+## Application environment
+
+Copy `env.local.example` to `.env.local` in the project root, then fill in the values from Supabase Dashboard > Project Settings > API:
+
+```dotenv
+NEXT_PUBLIC_SUPABASE_URL=https://YOUR_PROJECT_REF.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=YOUR_SUPABASE_PUBLISHABLE_KEY
+```
+
+For local Supabase, the URL may use `http://127.0.0.1:54321`.
+
+Only the project URL and publishable key belong in these public variables. Never place a secret key or legacy service-role key in a `NEXT_PUBLIC_*` variable. Keep `.env.local` out of Git.
+
+The public storefront can still build and run without Supabase credentials at this stage. The Proxy skips session refresh when both public variables are absent. Supabase client creation fails with a clear configuration error if called before the variables are set.
 
 ## Local database validation
 
@@ -20,7 +41,7 @@ supabase start
 supabase db reset
 ```
 
-supabase db reset applies migrations to the local Supabase database from a clean state. Inspect the resulting tables and RLS policies before applying to a hosted project.
+`supabase db reset` applies migrations to the local Supabase database from a clean state. Inspect the resulting tables and RLS policies before applying to a hosted project.
 
 Useful checks in the Supabase SQL editor:
 
@@ -63,4 +84,6 @@ Do not commit project credentials or database passwords. The project reference i
 
 ## Important implementation boundary
 
-Do not add Supabase service-role credentials to NEXT_PUBLIC variables or import a service-role client into client components. The storefront remains static until a separate PR introduces a server-only Supabase integration and verifies pricing parity against the current pricing engine.
+The Proxy in this stage refreshes Supabase sessions; it does **not** authorize access to admin routes. Route authorization must verify claims and the active `admin_profiles` role on the server, and database RLS remains the final data-access boundary.
+
+Do not add Supabase service-role credentials to public variables or import a service-role client into Client Components. The storefront remains on its TypeScript catalog until a separate, parity-tested database cutover.
