@@ -15,7 +15,7 @@ export default function HomePage() {
       <section className="mx-auto w-full max-w-7xl px-4 pb-16 pt-7 sm:px-6 sm:pt-10 lg:px-8">
         <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#130d1c] shadow-[0_25px_100px_rgba(168,85,247,0.12)]">
           <Image
-            src="/banner_credo_store.png"
+            src="/img/banner_credo_store.png"
             alt="Welcome to Credo Store — layanan Mobile Legends"
             width={900}
             height={296}
