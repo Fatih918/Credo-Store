@@ -5,7 +5,7 @@ import {
   updateAdminRoleAction,
 } from "@/features/admin/users/actions";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { isAdminRole, ADMIN_ROLES } from "@/features/admin/auth/permissions";
+import { isAdminRole, ASSIGNABLE_ADMIN_ROLES } from "@/features/admin/auth/permissions";
 
 interface AdminUsersPageProps {
   searchParams: Promise<{ result?: string }>;
@@ -81,7 +81,7 @@ export default async function AdminUsersPage({
           <label className="grid gap-2 text-sm text-zinc-300">
             Role
             <select name="role" defaultValue="viewer" className="rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-white outline-none focus:border-fuchsia-400">
-              {ADMIN_ROLES.map((role) => (
+              {ASSIGNABLE_ADMIN_ROLES.map((role) => (
                 <option key={role} value={role}>{role.replaceAll("_", " ")}</option>
               ))}
             </select>
@@ -101,7 +101,7 @@ export default async function AdminUsersPage({
         </div>
         <div className="divide-y divide-zinc-800">
           {(profiles ?? []).map((profile) => {
-            const isSelf = profile.user_id === actor.userId;
+            const isSelf = profile.user_id === actor.userId;\n            const isOwner = profile.role === "owner";
             return (
               <article key={profile.user_id} className="grid gap-4 px-6 py-5 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
                 <div className="min-w-0">
@@ -115,15 +115,15 @@ export default async function AdminUsersPage({
                   </span>
                   <form action={updateAdminRoleAction} className="flex items-center gap-2">
                     <input type="hidden" name="userId" value={profile.user_id} />
-                    <select name="role" defaultValue={isAdminRole(profile.role) ? profile.role : "viewer"} disabled={isSelf} aria-label={`Role untuk ${emailByUserId.get(profile.user_id) ?? profile.user_id}`} className="rounded-lg border border-zinc-700 bg-zinc-950 px-2 py-2 text-xs text-white disabled:opacity-40">
-                      {ADMIN_ROLES.map((role) => <option key={role} value={role}>{role.replaceAll("_", " ")}</option>)}
+                    <select name="role" defaultValue={isAdminRole(profile.role) ? profile.role : "viewer"} disabled={isSelf || isOwner} aria-label={`Role untuk ${emailByUserId.get(profile.user_id) ?? profile.user_id}`} className="rounded-lg border border-zinc-700 bg-zinc-950 px-2 py-2 text-xs text-white disabled:opacity-40">
+                      {ASSIGNABLE_ADMIN_ROLES.map((role) => <option key={role} value={role}>{role.replaceAll("_", " ")}</option>)}
                     </select>
-                    <button type="submit" disabled={isSelf} className="rounded-lg border border-zinc-700 px-3 py-2 text-xs text-zinc-300 hover:border-fuchsia-400 disabled:opacity-40">Simpan role</button>
+                    <button type="submit" disabled={isSelf || isOwner} className="rounded-lg border border-zinc-700 px-3 py-2 text-xs text-zinc-300 hover:border-fuchsia-400 disabled:opacity-40">Simpan role</button>
                   </form>
                   <form action={toggleAdminActiveAction}>
                     <input type="hidden" name="userId" value={profile.user_id} />
                     <input type="hidden" name="isActive" value={String(!profile.is_active)} />
-                    <button type="submit" disabled={isSelf} className="rounded-lg border border-zinc-700 px-3 py-2 text-xs text-zinc-300 hover:border-fuchsia-400 disabled:opacity-40">
+                    <button type="submit" disabled={isSelf || isOwner} className="rounded-lg border border-zinc-700 px-3 py-2 text-xs text-zinc-300 hover:border-fuchsia-400 disabled:opacity-40">
                       {profile.is_active ? "Nonaktifkan" : "Aktifkan"}
                     </button>
                   </form>
