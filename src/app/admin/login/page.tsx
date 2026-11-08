@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 
 import { loginAction } from "@/features/admin/auth/actions";
-import { requireAdmin } from "@/features/admin/auth/authorization";
 import { getSupabasePublicEnvOrNull } from "@/lib/supabase/env";
 
 export const metadata: Metadata = {
@@ -19,12 +17,6 @@ export default async function AdminLoginPage({
   searchParams,
 }: AdminLoginPageProps) {
   const supabaseEnv = getSupabasePublicEnvOrNull();
-
-  if (supabaseEnv) {
-    const admin = await requireAdmin().catch(() => null);
-    if (admin) redirect("/admin");
-  }
-
   const { error } = await searchParams;
   const isForbidden = error === "forbidden";
 
