@@ -8,6 +8,19 @@ async function getPage(path) {
   return { response, html: await response.text() };
 }
 
+test("shared document metadata and skip navigation are present", async () => {
+  const { response, html } = await getPage("/");
+
+  assert.equal(response.status, 200);
+  assert.match(html, /<html lang="id"/);
+  assert.match(html, /name="description"/);
+  assert.match(html, /property="og:site_name" content="Credo Store"/);
+  assert.match(html, /name="twitter:card" content="summary"/);
+  assert.match(html, /rel="icon"/);
+  assert.match(html, /href="#main-content"/);
+  assert.match(html, /id="main-content"/);
+});
+
 test("home page introduces the store and links to the catalog", async () => {
   const { response, html } = await getPage("/");
 
@@ -24,6 +37,7 @@ test("catalog page exposes all service categories and package detail links", asy
   assert.match(html, /Layanan Per Star/);
   assert.match(html, /Paket Harga Tetap/);
   assert.match(html, /Tier Progression/);
+  assert.match(html, /aria-labelledby="group-per-star"/);
   assert.match(html, /href="\/paket\/epic"/);
   assert.match(html, /href="\/paket\/epic-v-to-mythic"/);
 });
@@ -35,6 +49,8 @@ test("package detail page renders the selected service and order form", async ()
   assert.match(html, /Detail layanan Epic/i);
   assert.match(html, /Jumlah star/);
   assert.match(html, /Validasi pesanan/);
+  assert.match(html, /aria-labelledby="package-title"/);
+  assert.match(html, /aria-labelledby="order-form-title"/);
   assert.match(html, /Jangan masukkan password atau kode verifikasi/i);
   assert.doesNotMatch(html, /Lanjutkan ke WhatsApp/);
   assert.doesNotMatch(html, /type="password"/);
