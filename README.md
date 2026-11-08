@@ -4,7 +4,7 @@ Mobile-first storefront for Credo Store's Mobile Legends: Bang Bang rank-boostin
 
 ## Project status
 
-The MVP storefront, catalog, pricing engine, order form, and WhatsApp Click to Chat handoff are implemented. Current work focuses on automated quality coverage and production readiness.
+The storefront, catalog, pricing engine, order form, and WhatsApp Click to Chat handoff are implemented. Supabase catalog schema/seed/RLS and the basic Next.js SSR client/session-refresh foundation are now in place. Admin login, role-aware route authorization, dashboard CRUD, and database-backed public catalog reads remain future implementation steps.
 
 ## Requirements
 
@@ -19,6 +19,8 @@ npm run dev
 ```
 
 Open http://localhost:3000.
+
+To prepare Supabase integration, copy `env.local.example` to `.env.local` and fill in the public project URL and publishable key. See `docs/supabase-setup.md`.
 
 ## Quality checks
 
@@ -48,7 +50,7 @@ npm run check
 - `docs/accessibility-seo.md` — accessibility and SEO implementation, plus domain-dependent follow-up
 - `docs/storefront-pages.md` — route and storefront behavior
 - `docs/admin-dashboard-design.md` — admin dashboard and RBAC architecture
-- `docs/supabase-setup.md` — database migration and Supabase setup
+- `docs/supabase-setup.md` — database migration, environment, and SSR setup
 
 ## Store information
 
@@ -66,12 +68,15 @@ npm run check
 - [x] Order form, validation, and live order summary
 - [x] WhatsApp Click to Chat message generation
 - [x] Supabase catalog schema, seed data, RLS policies, and RBAC database primitives
+- [x] Supabase browser/server clients and Next.js 16 session-refresh Proxy
 - [x] Home, catalog, and package detail pages
 - [x] Unit tests and initial component/HTTP smoke coverage
 
-## MVP exclusions
+## Not implemented yet
 
-- No customer accounts, admin login UI, or database-backed storefront reads yet; the Supabase schema foundation is prepared separately
-- No payment gateway or automated WhatsApp sending
-- No admin dashboard or order tracking
-- No password or verification-code collection
+- Admin login UI and role-aware route authorization
+- Admin invitation/account provisioning and role management
+- Admin dashboard and category/subcategory CRUD
+- Database-backed public catalog reads
+- Payment gateway, automated WhatsApp sending, and order tracking
+- Password or verification-code collection
