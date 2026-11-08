@@ -15,6 +15,15 @@ describe("parseSupabasePublicEnv", () => {
     });
   });
 
+  it("allows the default local Supabase loopback URL", () => {
+    expect(
+      parseSupabasePublicEnv(
+        "http://127.0.0.1:54321",
+        "sb_publishable_example",
+      ).url,
+    ).toBe("http://127.0.0.1:54321");
+  });
+
   it("allows localhost HTTP for local development", () => {
     expect(
       parseSupabasePublicEnv(
