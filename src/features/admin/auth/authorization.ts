@@ -20,10 +20,8 @@ export interface AdminSession {
 
 export async function requireAdmin(): Promise<AdminSession> {
   const supabase = await createClient();
-  const {
-    data: { claims },
-    error: claimsError,
-  } = await supabase.auth.getClaims();
+  const { data, error: claimsError } = await supabase.auth.getClaims();
+  const claims = data?.claims;
 
   const userId =
     !claimsError && typeof claims?.sub === "string" ? claims.sub : null;
