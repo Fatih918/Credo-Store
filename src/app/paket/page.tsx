@@ -6,6 +6,10 @@ import { catalogItems } from "@/features/catalog/data/catalog";
 export const metadata: Metadata = {
   title: "Pilihan Paket",
   description: "Jelajahi layanan per star, paket harga tetap, dan tier progression Credo Store.",
+  openGraph: {
+    title: "Pilihan Paket | Credo Store",
+    description: "Jelajahi layanan per star, paket harga tetap, dan tier progression Credo Store.",
+  },
 };
 
 const groups = [
@@ -16,7 +20,7 @@ const groups = [
 
 export default function PackagesPage() {
   return (
-    <main className="min-h-screen bg-[#08070d] text-white">
+    <main id="main-content" tabIndex={-1} className="min-h-screen bg-[#08070d] text-white">
       <SiteHeader />
       <div className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
         <div className="max-w-2xl">
@@ -30,9 +34,9 @@ export default function PackagesPage() {
           {groups.map((group) => {
             const items = catalogItems.filter((item) => item.category === group.category);
             return (
-              <section key={group.category}>
+              <section key={group.category} aria-labelledby={`group-${group.category}`}>
                 <div className="mb-5">
-                  <h2 className="text-xl font-bold">{group.title}</h2>
+                  <h2 id={`group-${group.category}`} className="text-xl font-bold">{group.title}</h2>
                   <p className="mt-1 text-sm text-zinc-500">{group.description}</p>
                 </div>
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
