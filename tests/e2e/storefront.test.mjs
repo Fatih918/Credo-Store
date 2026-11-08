@@ -21,6 +21,14 @@ test("shared document metadata and skip navigation are present", async () => {
   assert.match(html, /id="main-content"/);
 });
 
+test("site header is a separate landmark before main content on all routes", async () => {
+  for (const path of ["/", "/paket", "/paket/epic"]) {
+    const { response, html } = await getPage(path);
+    assert.equal(response.status, 200);
+    assert.match(html, /<header[\\s\\S]*?<\\/header>[\\s\\S]*?<main id="main-content"/);
+  }
+});
+
 test("home page introduces the store and links to the catalog", async () => {
   const { response, html } = await getPage("/");
 
