@@ -53,7 +53,7 @@ describe("calculatePerStarPrice", () => {
     ["mythic", 1, 10_000],
     ["mythic-honor", 1, 12_500],
     ["mythic-glory", 1, 17_000],
-  ])("%s × %i returns %i rupiah", (serviceId, quantity, expected) => {
+  ] as const)("%s × %i returns %i rupiah", (serviceId, quantity, expected) => {
     expect(calculatePerStarPrice(serviceId, quantity)).toEqual({
       subtotal: expected,
       bonusStars: 0,
