@@ -1,4 +1,5 @@
 import { requirePermission } from "@/features/admin/auth/authorization";
+import { hasAdminPermission } from "@/features/admin/auth/permissions";
 import {
   createCategoryAction,
   toggleCategoryActiveAction,
@@ -13,7 +14,7 @@ interface AdminCategoriesPageProps {
 export default async function AdminCategoriesPage({
   searchParams,
 }: AdminCategoriesPageProps) {
-  await requirePermission("catalog:read");
+  const admin = await requirePermission("catalog:read");
   const { result } = await searchParams;
   const supabase = await createClient();
   const { data: categories, error } = await supabase
@@ -26,14 +27,7 @@ export default async function AdminCategoriesPage({
     throw new Error("Unable to load catalog categories.");
   }
 
-  const canWrite = await (async () => {
-    try {
-      await requirePermission("catalog:write");
-      return true;
-    } catch {
-      return false;
-    }
-  })();
+  const canWrite = hasAdminPermission(admin.role, "catalog:write");
 
   return (
     <section>
