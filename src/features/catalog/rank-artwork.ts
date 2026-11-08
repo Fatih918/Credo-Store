@@ -18,11 +18,11 @@ const rankArtworkByPackageId: Record<string, { src: string; alt: string }> = {
     alt: "Emblem rank Mythic Mobile Legends",
   },
   "mythic-honor": {
-    src: "/img/New_rank_mlbb_mytich_CR_xzeel-removebg-preview.png",
+    src: "/img/Mythical_Honor_Rank-removebg-preview.png",
     alt: "Emblem rank Mythic untuk layanan Mythic Honor",
   },
   "mythic-glory": {
-    src: "/img/New_rank_mlbb_mytich_CR_xzeel-removebg-preview.png",
+    src: "/img/rank_glory_mlbb_png_hd-removebg-preview.png",
     alt: "Emblem rank Mythic untuk layanan Mythic Glory",
   },
   "placement-mythic-10-matches": {
@@ -58,7 +58,7 @@ const rankArtworkByPackageId: Record<string, { src: string; alt: string }> = {
     alt: "Emblem rank tujuan Mythic",
   },
   "mythic-to-honor-25": {
-    src: "/img/New_rank_mlbb_mytich_CR_xzeel-removebg-preview.png",
+    src: "/img/Mythical_Honor_Rank-removebg-preview.png",
     alt: "Emblem rank Mythic untuk progression ke Mythic Honor",
   },
 };
