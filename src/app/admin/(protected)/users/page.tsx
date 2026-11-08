@@ -97,7 +97,8 @@ export default async function AdminUsersPage({
       <div className="mt-8 overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900">
         <div className="border-b border-zinc-800 px-6 py-4">
           <h2 className="font-semibold text-white">Daftar administrator</h2>
-          <p className="mt-1 text-xs text-zinc-500">{profiles?.length ?? 0} akun terdaftar</p>\n          <p className="mt-2 text-xs text-zinc-600">Akun Owner dikelola melalui prosedur bootstrap tepercaya dan tidak dapat diubah dari halaman ini.</p>
+          <p className="mt-1 text-xs text-zinc-500">{profiles?.length ?? 0} akun terdaftar</p>
+          <p className="mt-2 text-xs text-zinc-600">Akun Owner dikelola melalui prosedur bootstrap tepercaya dan tidak dapat diubah dari halaman ini.</p>
         </div>
         <div className="divide-y divide-zinc-800">
           {(profiles ?? []).map((profile) => {
