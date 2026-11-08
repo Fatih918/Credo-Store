@@ -31,6 +31,14 @@ export default async function ProtectedAdminLayout({
             <p className="mt-1 text-xs text-zinc-500">
               Area pengelolaan internal
             </p>
+            {admin.role === "owner" && (
+              <Link
+                href="/admin/users"
+                className="mt-2 inline-block text-xs font-medium text-fuchsia-300 hover:text-fuchsia-200"
+              >
+                Manajemen Admin
+              </Link>
+            )}
           </div>
           <div className="flex items-center gap-4">
             <div className="hidden text-right sm:block">

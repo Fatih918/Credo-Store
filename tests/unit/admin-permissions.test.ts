@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   hasAdminPermission,
   isAdminRole,
+  isAssignableAdminRole,
 } from "../../src/features/admin/auth/permissions";
 
 describe("admin role validation", () => {
@@ -19,6 +20,19 @@ describe("admin role validation", () => {
       expect(isAdminRole(role)).toBe(false);
     },
   );
+});
+
+describe("assignable administrator roles", () => {
+  it.each(["admin", "catalog_manager", "viewer"])(
+    "allows assigning %s through the owner UI",
+    (role) => {
+      expect(isAssignableAdminRole(role)).toBe(true);
+    },
+  );
+
+  it("does not allow granting owner through the account-management UI", () => {
+    expect(isAssignableAdminRole("owner")).toBe(false);
+  });
 });
 
 describe("admin permission matrix", () => {

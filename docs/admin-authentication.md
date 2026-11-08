@@ -11,7 +11,7 @@
 - Login, forbidden, and dashboard routes are marked `noindex`.
 - Database trigger enforcement for retaining at least one active owner.
 
-This stage does not implement invitations, administrator CRUD, category/subcategory CRUD, audit-log UI, or database-backed storefront reads.
+The authentication foundation does not implement category/subcategory CRUD, audit-log UI, or database-backed storefront reads. Owner-only administrator invitations and account management are implemented in the subsequent account-management stage.
 
 ## Supabase project configuration
 
@@ -22,7 +22,7 @@ NEXT_PUBLIC_SUPABASE_URL=https://YOUR_PROJECT_REF.supabase.co
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=YOUR_SUPABASE_PUBLISHABLE_KEY
 ```
 
-Never place a Supabase secret/service-role key in a `NEXT_PUBLIC_*` variable or browser code.
+Never place a Supabase secret/service-role key in a `NEXT_PUBLIC_*` variable or browser code. The owner-only account management module also requires `SUPABASE_SERVICE_ROLE_KEY` in the server environment. This key must remain server-only and must never be committed or exposed to the browser.
 
 In Supabase Dashboard, disable public sign-ups for the project. Admin accounts must be provisioned deliberately; the login page is not a registration page.
 
@@ -51,7 +51,7 @@ Do not insert passwords into `admin_profiles`. Supabase Auth owns credentials an
 
 ## Adding more administrators
 
-Until the owner-only invitation and role-management interface is implemented, provision additional users through the trusted Supabase Dashboard and SQL Editor workflow:
+The owner-only `/admin/users` page can invite `admin`, `catalog_manager`, and `viewer` accounts, change those roles, and activate/deactivate their access. Owner accounts cannot be created, demoted, or deactivated through this UI; use a deliberate trusted database operation for owner provisioning, while the database trigger prevents removal of the last active owner. Invited users receive an email from Supabase Auth. Configure Supabase Auth email delivery/SMTP before using invitations. The trusted Dashboard/SQL workflow remains available for recovery and initial bootstrap:
 
 1. Create the Auth user in the dashboard.
 2. Insert a profile with one of `admin`, `catalog_manager`, or `viewer`.
