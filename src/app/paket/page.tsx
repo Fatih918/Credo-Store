@@ -3,12 +3,18 @@ import { SiteHeader } from "@/components/site-header";
 import { CatalogCard } from "@/features/catalog/components/catalog-card";
 import { catalogItems } from "@/features/catalog/data/catalog";
 
+const pageDescription =
+  "Jelajahi layanan per star, paket harga tetap, dan tier progression Credo Store.";
+
 export const metadata: Metadata = {
   title: "Pilihan Paket",
-  description: "Jelajahi layanan per star, paket harga tetap, dan tier progression Credo Store.",
+  description: pageDescription,
   openGraph: {
+    type: "website",
+    locale: "id_ID",
+    siteName: "Credo Store",
     title: "Pilihan Paket | Credo Store",
-    description: "Jelajahi layanan per star, paket harga tetap, dan tier progression Credo Store.",
+    description: pageDescription,
   },
 };
 
