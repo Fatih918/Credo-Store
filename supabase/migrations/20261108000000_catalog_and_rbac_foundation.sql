@@ -291,11 +291,6 @@ to authenticated
 using ((select public.has_admin_role(array['owner', 'admin', 'catalog_manager'])))
 with check ((select public.has_admin_role(array['owner', 'admin', 'catalog_manager'])));
 
-create policy "catalog_roles_delete_categories"
-on public.categories for delete
-to authenticated
-using ((select public.has_admin_role(array['owner', 'admin', 'catalog_manager'])));
-
 create policy "catalog_roles_insert_subcategories"
 on public.subcategories for insert
 to authenticated
@@ -306,11 +301,6 @@ on public.subcategories for update
 to authenticated
 using ((select public.has_admin_role(array['owner', 'admin', 'catalog_manager'])))
 with check ((select public.has_admin_role(array['owner', 'admin', 'catalog_manager'])));
-
-create policy "catalog_roles_delete_subcategories"
-on public.subcategories for delete
-to authenticated
-using ((select public.has_admin_role(array['owner', 'admin', 'catalog_manager'])));
 
 -- An administrator can inspect only their own profile; owners can inspect all profiles.
 create policy "admins_read_own_profile_or_owner_reads_all"
