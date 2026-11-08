@@ -228,7 +228,7 @@ begin
   ) values (
     (select auth.uid()),
     action_value,
-    tg_table_name = 'categories' and 'category' or 'subcategory',
+    case when tg_table_name = 'categories' then 'category' else 'subcategory' end,
     entity_id_value,
     before_value,
     after_value
