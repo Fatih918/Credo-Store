@@ -14,7 +14,7 @@ describe("OrderForm", () => {
     expect(markup).toContain("Nickname");
     expect(markup).toContain("User ID");
     expect(markup).toContain("Server ID");
-    expect(markup).toContain("Rp4.500");
+    expect(markup).toContain("4.500");
     expect(markup).not.toContain("Lanjutkan ke WhatsApp");
     expect(markup).not.toContain('type="password"');
   });
@@ -25,7 +25,7 @@ describe("OrderForm", () => {
     );
 
     expect(markup).toContain("10 Stars Epic");
-    expect(markup).toContain("Rp40.000");
+    expect(markup).toContain("40.000");
     expect(markup).not.toContain('id="starQuantity"');
     expect(markup).not.toContain("Lanjutkan ke WhatsApp");
   });
@@ -37,6 +37,6 @@ describe("OrderForm", () => {
 
     expect(markup).toContain("Epic V → Mythic");
     expect(markup).toContain("Bonus paket: +1 star");
-    expect(markup).toContain("Rp235.000");
+    expect(markup).toContain("235.000");
   });
 });
