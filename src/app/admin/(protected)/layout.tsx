@@ -31,6 +31,12 @@ export default async function ProtectedAdminLayout({
             <p className="mt-1 text-xs text-zinc-500">
               Area pengelolaan internal
             </p>
+            <Link
+              href="/admin/categories"
+              className="mt-2 inline-block text-xs font-medium text-fuchsia-300 hover:text-fuchsia-200"
+            >
+              Manajemen Kategori
+            </Link>
             {admin.role === "owner" && (
               <Link
                 href="/admin/users"
