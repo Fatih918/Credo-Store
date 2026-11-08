@@ -47,7 +47,7 @@ export async function requireAdmin(): Promise<AdminSession> {
 
   return {
     userId,
-    email: typeof claims.email === "string" ? claims.email : null,
+    email: typeof claims?.email === "string" ? claims.email : null,
     displayName: profile.display_name,
     role: profile.role,
   };
