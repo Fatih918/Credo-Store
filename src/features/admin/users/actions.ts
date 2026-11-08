@@ -104,6 +104,9 @@ export async function updateAdminRoleAction(
   if (readError || !current) {
     finish("failed");
   }
+  if (current.role === "owner") {
+    finish("invalid");
+  }
 
   const { error: updateError } = await supabase
     .from("admin_profiles")
@@ -159,6 +162,9 @@ export async function toggleAdminActiveAction(
 
   if (readError || !current) {
     finish("failed");
+  }
+  if (current.role === "owner") {
+    finish("invalid");
   }
 
   const { error: updateError } = await supabase
