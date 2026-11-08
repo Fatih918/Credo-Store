@@ -21,7 +21,7 @@ describe("admin role validation", () => {
   );
 });
 
-describe("admin permission matrix", () => {
+describe("assignable administrator roles", () => {\n  it.each(["admin", "catalog_manager", "viewer"])(\n    "allows assigning %s through the owner UI",\n    (role) => {\n      expect(isAssignableAdminRole(role)).toBe(true);\n    },\n  );\n\n  it("does not allow granting owner through the account-management UI", () => {\n    expect(isAssignableAdminRole("owner")).toBe(false);\n  });\n});\n\ndescribe("admin permission matrix", () => {
   it("grants owner all permissions", () => {
     for (const permission of [
       "dashboard:view",
