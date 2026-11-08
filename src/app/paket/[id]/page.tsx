@@ -27,6 +27,9 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     title: item.name,
     description,
     openGraph: {
+      type: "website",
+      locale: "id_ID",
+      siteName: "Credo Store",
       title: `${item.name} | Credo Store`,
       description,
     },
