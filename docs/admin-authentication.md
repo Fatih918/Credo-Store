@@ -51,7 +51,7 @@ Do not insert passwords into `admin_profiles`. Supabase Auth owns credentials an
 
 ## Adding more administrators
 
-The owner-only `/admin/users` page can invite administrators, change their roles, and activate/deactivate access. Invited users receive an email from Supabase Auth. Configure Supabase Auth email delivery/SMTP before using invitations. The trusted Dashboard/SQL workflow remains available for recovery and initial bootstrap:
+The owner-only `/admin/users` page can invite `admin`, `catalog_manager`, and `viewer` accounts, change those roles, and activate/deactivate their access. Owner accounts cannot be created, demoted, or deactivated through this UI; use a deliberate trusted database operation for owner provisioning, while the database trigger prevents removal of the last active owner. Invited users receive an email from Supabase Auth. Configure Supabase Auth email delivery/SMTP before using invitations. The trusted Dashboard/SQL workflow remains available for recovery and initial bootstrap:
 
 1. Create the Auth user in the dashboard.
 2. Insert a profile with one of `admin`, `catalog_manager`, or `viewer`.
