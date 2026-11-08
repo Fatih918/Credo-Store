@@ -8,7 +8,8 @@
 - Global `:focus-visible` styling provides a visible keyboard focus indicator.
 - The shared navigation has an accessible name; the brand link has an explicit home label.
 - Catalog groups and package-detail sections expose programmatic heading relationships.
-- Existing form labels, error messages, and image alternative text are retained.
+- Form validation errors are announced and associated with their corresponding controls through `aria-describedby` and `aria-invalid`.
+- Existing form labels and informative image alternative text are retained.
 - Global metadata includes a descriptive title, description, robots policy, Open Graph basics, Twitter card basics, and the existing store logo as an icon.
 - Route-specific metadata is provided for catalog and package detail pages.
 - Reduced-motion preferences continue to be respected.
