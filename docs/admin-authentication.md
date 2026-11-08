@@ -65,6 +65,10 @@ insert into public.admin_profiles (user_id, role, display_name, is_active)
 values ('AUTH_USER_UUID', 'catalog_manager', 'Catalog Staff', true);
 ```
 
+## Category management
+
+The category page is available to all active administrator roles with `catalog:read`. Create, edit, and activation changes require `catalog:write`; server actions enforce this permission independently of the UI. Category changes are written through the authenticated Supabase SSR client so PostgreSQL RLS and the catalog audit trigger remain in effect. Category records are deactivated rather than hard-deleted.
+
 ## Role permissions
 
 | Permission | owner | admin | catalog_manager | viewer |
