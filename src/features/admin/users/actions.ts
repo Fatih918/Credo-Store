@@ -75,7 +75,8 @@ export async function inviteAdminAction(formData: FormData): Promise<void> {
   });
 
   if (auditError) {
-    // Keep the account creation visible as a failure; do not expose database details.
+    await supabase.from("admin_profiles").delete().eq("user_id", invitation.user.id);
+    await supabase.auth.admin.deleteUser(invitation.user.id);
     finish("failed");
   }
 
@@ -123,6 +124,10 @@ export async function updateAdminRoleAction(
   });
 
   if (auditError) {
+    await supabase
+      .from("admin_profiles")
+      .update({ role: current.role })
+      .eq("user_id", targetUserId);
     finish("failed");
   }
 
@@ -175,6 +180,10 @@ export async function toggleAdminActiveAction(
   });
 
   if (auditError) {
+    await supabase
+      .from("admin_profiles")
+      .update({ is_active: current.is_active })
+      .eq("user_id", targetUserId);
     finish("failed");
   }
 
