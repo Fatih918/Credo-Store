@@ -4,7 +4,7 @@ Mobile-first storefront for Credo Store's Mobile Legends: Bang Bang rank-boostin
 
 ## Project status
 
-The storefront, catalog, pricing engine, order form, and WhatsApp Click to Chat handoff are implemented. Supabase catalog schema/seed/RLS and the basic Next.js SSR client/session-refresh foundation are now in place. Admin login, role-aware route authorization, dashboard CRUD, and database-backed public catalog reads remain future implementation steps.
+The storefront, catalog, pricing engine, order form, and WhatsApp Click to Chat handoff are implemented. Supabase catalog schema/seed/RLS, SSR clients, session refresh, admin login, and server-side role authorization are now in place. Admin account management, catalog CRUD, audit-log UI, and database-backed public catalog reads remain future implementation steps.
 
 ## Requirements
 
@@ -20,7 +20,7 @@ npm run dev
 
 Open http://localhost:3000.
 
-To prepare Supabase integration, copy `env.local.example` to `.env.local` and fill in the public project URL and publishable key. See `docs/supabase-setup.md`.
+To configure Supabase, copy `env.local.example` to `.env.local` and fill in the public project URL and publishable key. See `docs/supabase-setup.md` and `docs/admin-authentication.md`.
 
 ## Quality checks
 
@@ -51,6 +51,7 @@ npm run check
 - `docs/storefront-pages.md` — route and storefront behavior
 - `docs/admin-dashboard-design.md` — admin dashboard and RBAC architecture
 - `docs/supabase-setup.md` — database migration, environment, and SSR setup
+- `docs/admin-authentication.md` — admin login, RBAC, and first-owner bootstrap
 
 ## Store information
 
@@ -65,18 +66,20 @@ npm run check
 - [x] TypeScript strict configuration and Tailwind CSS v4
 - [x] ESLint, Vitest, and GitHub Actions CI
 - [x] Catalog data, rank artwork, and pricing engine
-- [x] Order form, validation, and live order summary
-- [x] WhatsApp Click to Chat message generation
+- [x] Order form, validation, and WhatsApp Click to Chat
 - [x] Supabase catalog schema, seed data, RLS policies, and RBAC database primitives
 - [x] Supabase browser/server clients and Next.js 16 session-refresh Proxy
+- [x] Admin email/password login and logout
+- [x] Server-side admin session and permission guards
+- [x] Last-active-owner database protection
 - [x] Home, catalog, and package detail pages
 - [x] Unit tests and initial component/HTTP smoke coverage
 
 ## Not implemented yet
 
-- Admin login UI and role-aware route authorization
-- Admin invitation/account provisioning and role management
-- Admin dashboard and category/subcategory CRUD
+- Owner-only admin invitation and role management UI
+- Admin category/subcategory CRUD
+- Admin audit-log UI
 - Database-backed public catalog reads
 - Payment gateway, automated WhatsApp sending, and order tracking
 - Password or verification-code collection
