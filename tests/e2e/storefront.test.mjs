@@ -25,7 +25,9 @@ test("site header is a separate landmark before main content on all routes", asy
   for (const path of ["/", "/paket", "/paket/epic"]) {
     const { response, html } = await getPage(path);
     assert.equal(response.status, 200);
-    assert.match(html, /<header[\\s\\S]*?<\\/header>[\\s\\S]*?<main id="main-content"/);
+    const headerEnd = html.indexOf("</header>");
+    const mainStart = html.indexOf('<main id="main-content"');
+    assert.ok(headerEnd >= 0 && mainStart > headerEnd, `Expected the site header before main content on ${path}`);
   }
 });
 
