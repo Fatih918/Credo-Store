@@ -4,6 +4,7 @@ import { useMemo, useState, type FormEvent } from "react";
 import { catalogItems } from "../../catalog/data/catalog";
 import { formatRupiah } from "@/lib/currency";
 import { calculateOrderSummary } from "../order-pricing";
+import { buildWhatsAppMessage, buildWhatsAppUrl } from "../whatsapp";
 import { hasOrderErrors, validateOrderDraft } from "../validation";
 import type { OrderDraft, OrderFieldErrors } from "../types";
 
@@ -51,6 +52,15 @@ export function OrderForm() {
     setDraft((current) => ({ ...current, [field]: value }));
     setValidated(false);
   }
+
+  const whatsappUrl = useMemo(() => {
+    if (!validated || !summary) return null;
+    try {
+      return buildWhatsAppUrl(buildWhatsAppMessage(draft, summary));
+    } catch {
+      return null;
+    }
+  }, [draft, summary, validated]);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -182,9 +192,22 @@ export function OrderForm() {
         </button>
         {validated && (
           <p role="status" className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-3 text-sm text-emerald-300">
-            Detail pesanan valid. Pengiriman ke WhatsApp akan tersedia pada tahap integrasi berikutnya.
+            Detail pesanan valid. Periksa kembali pesan sebelum mengirimkannya melalui WhatsApp.
           </p>
         )}
+        {validated && whatsappUrl && (
+          <a
+            href={whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block w-full rounded-xl bg-emerald-600 px-5 py-3.5 text-center text-sm font-semibold text-white transition hover:bg-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-300 focus:ring-offset-2 focus:ring-offset-zinc-900"
+          >
+            Lanjutkan ke WhatsApp
+          </a>
+        )}
+        <p className="text-xs leading-5 text-zinc-500">
+          WhatsApp akan terbuka dengan pesan yang sudah diisi. Pesan hanya terkirim setelah kamu menekan tombol Kirim di WhatsApp.
+        </p>
       </section>
 
       <aside className="h-fit rounded-2xl border border-zinc-800 bg-zinc-900/70 p-5 sm:p-7 lg:sticky lg:top-6">
