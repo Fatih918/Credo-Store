@@ -1,9 +1,11 @@
+import Image from "next/image";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SiteHeader } from "@/components/site-header";
 import { catalogItems } from "@/features/catalog/data/catalog";
 import type { CatalogItem } from "@/features/catalog/types";
+import { getRankArtwork } from "@/features/catalog/rank-artwork";
 import { formatRupiah } from "@/lib/currency";
 import { OrderForm } from "@/features/order/components/order-form";
 
@@ -48,6 +50,7 @@ export default async function PackageDetailPage({ params }: { params: Promise<{ 
   const item = getItem(id);
   if (!item) notFound();
   const originalPrice = originalFor(item);
+  const artwork = getRankArtwork(item);
 
   return (
     <main className="min-h-screen bg-[#08070d] text-white">
@@ -57,6 +60,18 @@ export default async function PackageDetailPage({ params }: { params: Promise<{ 
         <div className="mt-7 grid gap-8 lg:grid-cols-[0.85fr_1.15fr]">
           <section className="h-fit overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-[#241332] to-[#100d17] p-6 sm:p-8">
             <p className="text-xs font-bold tracking-[0.2em] text-fuchsia-300">DETAIL PAKET</p>
+            {artwork ? (
+              <div className="mx-auto mt-4 flex h-52 w-full max-w-[260px] items-center justify-center">
+                <Image
+                  src={artwork.src}
+                  alt={artwork.alt}
+                  width={260}
+                  height={260}
+                  className="h-full w-full object-contain drop-shadow-[0_10px_30px_rgba(168,85,247,0.18)]"
+                  priority
+                />
+              </div>
+            ) : null}
             <h1 className="mt-4 text-2xl font-black sm:text-3xl">{item.name}</h1>
             <p className="mt-4 text-sm leading-7 text-zinc-300">{descriptionFor(item)}</p>
             <div className="mt-7 border-t border-white/10 pt-6">
