@@ -21,7 +21,12 @@ export function parseSupabasePublicEnv(
     throw new Error("NEXT_PUBLIC_SUPABASE_URL must be a valid absolute URL.");
   }
 
-  if (parsedUrl.protocol !== "https:" && parsedUrl.hostname !== "localhost") {
+  const isLocalDevelopment =
+    parsedUrl.hostname === "localhost" ||
+    parsedUrl.hostname === "127.0.0.1" ||
+    parsedUrl.hostname === "[::1]";
+
+  if (parsedUrl.protocol !== "https:" && !isLocalDevelopment) {
     throw new Error(
       "NEXT_PUBLIC_SUPABASE_URL must use HTTPS, except for localhost development.",
     );
