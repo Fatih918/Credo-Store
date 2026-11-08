@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatRupiah } from "@/lib/currency";
+import { formatRupiah } from "../../src/lib/currency";
 
 describe("formatRupiah", () => {
   it("formats integer rupiah values using Indonesian locale", () => {
