@@ -36,6 +36,34 @@ a {
   text-decoration: none;
 }
 
+:focus-visible {
+  outline: 2px solid #e879f9;
+  outline-offset: 3px;
+}
+
+.skip-link {
+  position: fixed;
+  z-index: 100;
+  top: 1rem;
+  left: 1rem;
+  transform: translateY(-200%);
+  border-radius: 0.75rem;
+  background: #f0abfc;
+  padding: 0.75rem 1rem;
+  color: #181025;
+  font-size: 0.875rem;
+  font-weight: 700;
+  transition: transform 150ms ease;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+#main-content:focus {
+  outline: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
