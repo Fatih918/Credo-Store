@@ -19,7 +19,7 @@
 ## Pricing
 - [ ] Per-star total equals configured promo rate × positive integer quantity.
 - [ ] Zero, negative, fractional, missing, and non-numeric quantities are rejected.
-- [ ] Fixed packages return their configured price without multiplication.
+- [ ] Fixed-package prices are not multiplied by a quantity.
 - [ ] Currency uses Indonesian locale.
 - [ ] Testimonial reward is not deducted from initial checkout.
 - [ ] Rp20.000 is ineligible; Rp20.001 is eligible only after completion and proof.
@@ -51,14 +51,21 @@
 - [ ] Text and controls have sufficient contrast.
 - [ ] Reduced-motion preferences are respected if animation is used.
 
-## Quality gates
+## Automated quality gates
 - [ ] Typecheck passes.
 - [ ] Lint passes.
 - [ ] Unit tests cover pricing, testimonial eligibility, currency, and WhatsApp URL generation.
-- [ ] Component tests cover selection and form validation.
-- [ ] E2E covers homepage → selection → order details → WhatsApp URL.
+- [ ] Order form render tests cover per-star, fixed-package, and tier-progression initial states.
+- [ ] Production HTTP smoke tests cover Home, catalog, package detail, and unknown-package 404.
 - [ ] Production build succeeds.
 - [ ] Tests never send a real WhatsApp message.
+
+## Manual/browser acceptance still required
+- [ ] Interactions update quantity and subtotal correctly in a browser.
+- [ ] Invalid form data blocks WhatsApp handoff.
+- [ ] Validated form opens the correct prefilled WhatsApp URL.
+- [ ] Mobile and desktop layouts are checked in a real browser.
+- [ ] Keyboard navigation, focus visibility, and contrast are reviewed.
 
 ## MVP boundaries
 - [ ] No database/order persistence.
