@@ -1,89 +1,30 @@
-# Credo Store — Acceptance Criteria
+# Accessibility and SEO
 
-## Landing page
-- [ ] Homepage identifies Credo Store and its MLBB service.
-- [ ] Grand-opening promotion is visible without obscuring prices.
-- [ ] Customer can reach the catalog and order flow.
-- [ ] No fabricated testimonials, ratings, order counts, or guarantees.
+## Implemented
 
-## Catalog
-- [ ] Three categories exist: per-star, fixed packages, tier progression.
-- [ ] All supplied services and prices match the approved price list.
-- [ ] Original prices appear only where supplied.
-- [ ] Per-star services have no five-star minimum.
-- [ ] Fixed packages use their exact fixed price.
-- [ ] Epic V → Mythic is marked Best Seller.
-- [ ] Tier progression displays +1 bonus star.
-- [ ] Placement Mythic states 10 matches / all matches included.
+- The root document declares Indonesian as its language.
+- Every storefront route has a single main landmark with the `main-content` skip target.
+- A keyboard-accessible skip link appears when focused.
+- Global `:focus-visible` styling provides a visible keyboard focus indicator.
+- The shared navigation has an accessible name; the brand link has an explicit home label.
+- Catalog groups and package-detail sections expose programmatic heading relationships.
+- Existing form labels, error messages, and image alternative text are retained.
+- Global metadata includes a descriptive title, description, robots policy, Open Graph basics, Twitter card basics, and the existing store logo as an icon.
+- Route-specific metadata is provided for catalog and package detail pages.
+- Reduced-motion preferences continue to be respected.
 
-## Pricing
-- [ ] Per-star total equals configured promo rate × positive integer quantity.
-- [ ] Zero, negative, fractional, missing, and non-numeric quantities are rejected.
-- [ ] Fixed-package prices are not multiplied by a quantity.
-- [ ] Currency uses Indonesian locale.
-- [ ] Testimonial reward is not deducted from initial checkout.
-- [ ] Rp20.000 is ineligible; Rp20.001 is eligible only after completion and proof.
-- [ ] Cross-tier orders are not silently split without an approved rule.
+## Intentionally deferred
 
-## Order form
-- [ ] Customer can review the selected service before handoff.
-- [ ] Summary updates when service or quantity changes.
-- [ ] Optional fields can be blank.
-- [ ] No account-password field exists.
-- [ ] Free text is validated and length-limited.
-- [ ] Invalid data blocks WhatsApp handoff and shows a useful error.
-- [ ] Customer can edit the order before handoff.
+The production domain has not been supplied. Therefore this change does not invent:
+- `metadataBase` or canonical URLs.
+- An absolute sitemap URL.
+- Absolute Open Graph image URLs.
+- Domain-specific Search Console or analytics configuration.
 
-## WhatsApp
-- [ ] Destination number is exactly 6283165112261.
-- [ ] URL uses https://wa.me/ format.
-- [ ] Message includes service, quantity when applicable, total, and supplied customer details.
-- [ ] Customer-entered text is URL encoded.
-- [ ] Empty optional fields are omitted cleanly.
-- [ ] WhatsApp opens only after explicit customer action.
-- [ ] UI says customer must press Send in WhatsApp.
-- [ ] No message is sent in the background.
+After the production domain is finalized, add and verify canonical URLs, a sitemap, absolute social preview metadata, and domain ownership verification.
 
-## Accessibility
-- [ ] Document language is Indonesian.
-- [ ] Every route exposes one main landmark with a stable skip-navigation target.
-- [ ] A keyboard user can reach the skip link and see visible focus indicators.
-- [ ] Navigation has an accessible label.
-- [ ] Catalog groups and package detail sections have programmatic headings.
-- [ ] Form controls have associated labels and errors remain readable.
-- [ ] Informative images have meaningful alternative text; decorative images use empty alt text.
-- [ ] Text and controls have sufficient contrast.
-- [ ] Reduced-motion preferences are respected.
+## Verification
 
-## SEO and sharing
-- [ ] Each route has a meaningful title and description.
-- [ ] Shared metadata includes Open Graph and Twitter card basics.
-- [ ] The store icon is exposed through metadata.
-- [ ] Public pages are indexable; invalid package pages are not indexable.
-- [ ] Canonical URLs, sitemap, and absolute social preview images are configured only after the production domain is known.
+Automated production HTTP smoke tests verify document language, key metadata tags, icon reference, skip navigation, main landmarks, and page section relationships.
 
-## Responsive
-- [ ] Primary flow works on narrow mobile screens without horizontal overflow.
-- [ ] Desktop layout remains readable.
-
-## Automated quality gates
-- [ ] Typecheck passes.
-- [ ] Lint passes.
-- [ ] Unit tests cover pricing, testimonial eligibility, currency, and WhatsApp URL generation.
-- [ ] Order form render tests cover per-star, fixed-package, and tier-progression initial states.
-- [ ] Production HTTP smoke tests cover Home, catalog, package detail, metadata, accessibility landmarks, and unknown-package 404.
-- [ ] Production build succeeds.
-- [ ] Tests never send a real WhatsApp message.
-
-## Manual/browser acceptance still required
-- [ ] Interactions update quantity and subtotal correctly in a browser.
-- [ ] Invalid form data blocks WhatsApp handoff.
-- [ ] Validated form opens the correct prefilled WhatsApp URL.
-- [ ] Mobile and desktop layouts are checked in a real browser.
-- [ ] Keyboard navigation, focus visibility, and contrast are reviewed with keyboard and accessibility tooling.
-
-## MVP boundaries
-- [ ] No database/order persistence.
-- [ ] No authentication.
-- [ ] No payment gateway.
-- [ ] No admin dashboard.
+Automated markup checks do not replace browser-based accessibility review. Before launch, test keyboard-only navigation, screen-reader announcements, color contrast, zoom/reflow, and mobile layout in real browsers.
