@@ -10,7 +10,6 @@ export const metadata: Metadata = {
   description:
     "Lihat layanan joki rank Mobile Legends dari Credo Store dan pesan langsung melalui WhatsApp.",
   applicationName: "Credo Store",
-  metadataBase: new URL("https://credo-store.vercel.app"),
 };
 
 export const viewport: Viewport = {
