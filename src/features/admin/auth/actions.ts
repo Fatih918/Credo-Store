@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 
 import { createClient } from "@/lib/supabase/server";
+import { isAdminRole } from "./permissions";
 
 export async function loginAction(formData: FormData): Promise<void> {
   const emailValue = formData.get("email");
@@ -45,11 +46,16 @@ export async function loginAction(formData: FormData): Promise<void> {
 
   const { data: profile, error: profileError } = await supabase
     .from("admin_profiles")
-    .select("is_active")
+    .select("role, is_active")
     .eq("user_id", user.id)
     .maybeSingle();
 
-  if (profileError || !profile || profile.is_active !== true) {
+  if (
+    profileError ||
+    !profile ||
+    profile.is_active !== true ||
+    !isAdminRole(profile.role)
+  ) {
     await supabase.auth.signOut();
     redirect("/admin/login?error=forbidden");
   }
