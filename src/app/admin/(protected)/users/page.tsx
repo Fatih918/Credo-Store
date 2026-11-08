@@ -14,7 +14,7 @@ interface AdminUsersPageProps {
 export default async function AdminUsersPage({
   searchParams,
 }: AdminUsersPageProps) {
-  await requirePermission("admins:manage");
+  const actor = await requirePermission("admins:manage");
   const { result } = await searchParams;
   const supabase = createAdminClient();
 
@@ -101,7 +101,7 @@ export default async function AdminUsersPage({
         </div>
         <div className="divide-y divide-zinc-800">
           {(profiles ?? []).map((profile) => {
-            const isSelf = profile.user_id === (awaitActorIdPlaceholder);
+            const isSelf = profile.user_id === actor.userId;
             return (
               <article key={profile.user_id} className="grid gap-4 px-6 py-5 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
                 <div className="min-w-0">
