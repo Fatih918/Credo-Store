@@ -47,6 +47,8 @@ npm run check
 - `docs/testing-strategy.md` — automated coverage and remaining manual QA
 - `docs/accessibility-seo.md` — accessibility and SEO implementation, plus domain-dependent follow-up
 - `docs/storefront-pages.md` — route and storefront behavior
+- `docs/admin-dashboard-design.md` — admin dashboard and RBAC architecture
+- `docs/supabase-setup.md` — database migration and Supabase setup
 
 ## Store information
 
@@ -63,12 +65,13 @@ npm run check
 - [x] Catalog data, rank artwork, and pricing engine
 - [x] Order form, validation, and live order summary
 - [x] WhatsApp Click to Chat message generation
+- [x] Supabase catalog schema, seed data, RLS policies, and RBAC database primitives
 - [x] Home, catalog, and package detail pages
 - [x] Unit tests and initial component/HTTP smoke coverage
 
 ## MVP exclusions
 
-- No account authentication or database persistence
+- No customer accounts, admin login UI, or database-backed storefront reads yet; the Supabase schema foundation is prepared separately
 - No payment gateway or automated WhatsApp sending
 - No admin dashboard or order tracking
 - No password or verification-code collection
