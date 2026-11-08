@@ -1,0 +1,232 @@
+"use client";
+
+import { useMemo, useState, type FormEvent } from "react";
+import { catalogItems } from "../../catalog/data/catalog";
+import { formatRupiah } from "@/lib/currency";
+import { calculateOrderSummary } from "../order-pricing";
+import { hasOrderErrors, validateOrderDraft } from "../validation";
+import type { OrderDraft, OrderFieldErrors } from "../types";
+
+const initialDraft: OrderDraft = {
+  catalogItemId: "epic",
+  starQuantity: 1,
+  nickname: "",
+  userId: "",
+  serverId: "",
+  heroOrRoleRequest: "",
+  winRateOrStreakRequest: "",
+  notes: "",
+};
+
+const fieldClassName =
+  "mt-2 w-full rounded-xl border border-zinc-700 bg-zinc-950 px-4 py-3 text-sm text-zinc-100 outline-none transition placeholder:text-zinc-600 focus:border-violet-400 focus:ring-2 focus:ring-violet-400/20";
+
+function FieldError({ children }: { children?: string }) {
+  if (!children) return null;
+
+  return <p className="mt-1 text-xs text-rose-400">{children}</p>;
+}
+
+export function OrderForm() {
+  const [draft, setDraft] = useState<OrderDraft>(initialDraft);
+  const [errors, setErrors] = useState<OrderFieldErrors>({});
+  const [validated, setValidated] = useState(false);
+
+  const selectedItem = catalogItems.find(
+    (item) => item.id === draft.catalogItemId,
+  );
+
+  const summary = useMemo(() => {
+    try {
+      return calculateOrderSummary(draft.catalogItemId, draft.starQuantity);
+    } catch {
+      return null;
+    }
+  }, [draft.catalogItemId, draft.starQuantity]);
+
+  function updateDraft<K extends keyof OrderDraft>(
+    field: K,
+    value: OrderDraft[K],
+  ) {
+    setDraft((current) => ({ ...current, [field]: value }));
+    setValidated(false);
+  }
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const nextErrors = validateOrderDraft(draft);
+    setErrors(nextErrors);
+    setValidated(!hasOrderErrors(nextErrors));
+  }
+
+  return (
+    <form onSubmit={handleSubmit} noValidate className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+      <section className="space-y-6 rounded-2xl border border-zinc-800 bg-zinc-900/70 p-5 sm:p-7">
+        <div>
+          <p className="text-xs font-semibold tracking-[0.18em] text-violet-400">
+            01 / PILIH LAYANAN
+          </p>
+          <h2 className="mt-2 text-xl font-semibold text-zinc-50">
+            Detail pesanan
+          </h2>
+          <p className="mt-1 text-sm text-zinc-400">
+            Pilih layanan dan isi detail yang ingin disampaikan ke Credo Store.
+          </p>
+        </div>
+
+        <div>
+          <label htmlFor="catalogItemId" className="text-sm font-medium text-zinc-200">
+            Layanan
+          </label>
+          <select
+            id="catalogItemId"
+            className={fieldClassName}
+            value={draft.catalogItemId}
+            onChange={(event) => {
+              updateDraft("catalogItemId", event.target.value);
+              setErrors({});
+            }}
+          >
+            <optgroup label="Per star">
+              {catalogItems.filter((item) => item.category === "per-star").map((item) => (
+                <option key={item.id} value={item.id}>{item.name}</option>
+              ))}
+            </optgroup>
+            <optgroup label="Paket harga tetap">
+              {catalogItems.filter((item) => item.category === "fixed-package").map((item) => (
+                <option key={item.id} value={item.id}>{item.name}</option>
+              ))}
+            </optgroup>
+            <optgroup label="Tier progression">
+              {catalogItems.filter((item) => item.category === "tier-progression").map((item) => (
+                <option key={item.id} value={item.id}>{item.name}</option>
+              ))}
+            </optgroup>
+          </select>
+          <FieldError>{errors.catalogItemId}</FieldError>
+        </div>
+
+        {selectedItem?.category === "per-star" && (
+          <div>
+            <label htmlFor="starQuantity" className="text-sm font-medium text-zinc-200">
+              Jumlah star
+            </label>
+            <input
+              id="starQuantity"
+              type="number"
+              min={1}
+              step={1}
+              inputMode="numeric"
+              className={fieldClassName}
+              value={draft.starQuantity}
+              onChange={(event) => updateDraft("starQuantity", Number(event.target.value))}
+            />
+            <FieldError>{errors.starQuantity}</FieldError>
+            <p className="mt-1 text-xs text-zinc-500">
+              Tidak ada minimum lima star. Masukkan jumlah bilangan bulat positif.
+            </p>
+          </div>
+        )}
+
+        <div className="border-t border-zinc-800 pt-5">
+          <p className="text-xs font-semibold tracking-[0.18em] text-violet-400">
+            02 / DETAIL AKUN
+          </p>
+          <p className="mt-1 text-xs text-zinc-500">
+            Kolom berikut opsional sementara menunggu konfirmasi aturan wajib dari toko.
+          </p>
+          <div className="mt-4 grid gap-4 sm:grid-cols-2">
+            <div>
+              <label htmlFor="nickname" className="text-sm font-medium text-zinc-200">Nickname</label>
+              <input id="nickname" maxLength={40} className={fieldClassName} value={draft.nickname} onChange={(event) => updateDraft("nickname", event.target.value)} placeholder="Nickname in-game" />
+              <FieldError>{errors.nickname}</FieldError>
+            </div>
+            <div>
+              <label htmlFor="userId" className="text-sm font-medium text-zinc-200">User ID</label>
+              <input id="userId" maxLength={30} className={fieldClassName} value={draft.userId} onChange={(event) => updateDraft("userId", event.target.value)} placeholder="Contoh: 123456789" />
+              <FieldError>{errors.userId}</FieldError>
+            </div>
+            <div>
+              <label htmlFor="serverId" className="text-sm font-medium text-zinc-200">Server ID</label>
+              <input id="serverId" maxLength={20} className={fieldClassName} value={draft.serverId} onChange={(event) => updateDraft("serverId", event.target.value)} placeholder="Contoh: 1234" />
+              <FieldError>{errors.serverId}</FieldError>
+            </div>
+            <div>
+              <label htmlFor="heroOrRoleRequest" className="text-sm font-medium text-zinc-200">Request hero / role</label>
+              <input id="heroOrRoleRequest" maxLength={120} className={fieldClassName} value={draft.heroOrRoleRequest} onChange={(event) => updateDraft("heroOrRoleRequest", event.target.value)} placeholder="Opsional" />
+              <FieldError>{errors.heroOrRoleRequest}</FieldError>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label htmlFor="winRateOrStreakRequest" className="text-sm font-medium text-zinc-200">
+            Request win rate / win streak
+          </label>
+          <textarea id="winRateOrStreakRequest" rows={2} maxLength={160} className={fieldClassName} value={draft.winRateOrStreakRequest} onChange={(event) => updateDraft("winRateOrStreakRequest", event.target.value)} placeholder="Permintaan akan dikonfirmasi berdasarkan kondisi pertandingan." />
+          <FieldError>{errors.winRateOrStreakRequest}</FieldError>
+        </div>
+
+        <div>
+          <label htmlFor="notes" className="text-sm font-medium text-zinc-200">Catatan tambahan</label>
+          <textarea id="notes" rows={3} maxLength={500} className={fieldClassName} value={draft.notes} onChange={(event) => updateDraft("notes", event.target.value)} placeholder="Tulis informasi tambahan (opsional)." />
+          <FieldError>{errors.notes}</FieldError>
+        </div>
+
+        <p className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-3 text-xs leading-5 text-amber-200/80">
+          Jangan masukkan password atau kode verifikasi akun ke formulir ini.
+        </p>
+
+        <button type="submit" className="w-full rounded-xl bg-violet-500 px-5 py-3.5 text-sm font-semibold text-white transition hover:bg-violet-400 focus:outline-none focus:ring-2 focus:ring-violet-300 focus:ring-offset-2 focus:ring-offset-zinc-900">
+          Validasi pesanan
+        </button>
+        {validated && (
+          <p role="status" className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-3 text-sm text-emerald-300">
+            Detail pesanan valid. Pengiriman ke WhatsApp akan tersedia pada tahap integrasi berikutnya.
+          </p>
+        )}
+      </section>
+
+      <aside className="h-fit rounded-2xl border border-zinc-800 bg-zinc-900/70 p-5 sm:p-7 lg:sticky lg:top-6">
+        <p className="text-xs font-semibold tracking-[0.18em] text-violet-400">
+          RINGKASAN HARGA
+        </p>
+        <h2 className="mt-2 text-xl font-semibold text-zinc-50">Estimasi pesanan</h2>
+        {summary ? (
+          <>
+            <p className="mt-5 text-sm text-zinc-400">{summary.categoryLabel}</p>
+            <p className="mt-1 font-medium text-zinc-100">{summary.itemName}</p>
+            {selectedItem?.category === "per-star" && (
+              <p className="mt-1 text-sm text-zinc-400">
+                {draft.starQuantity} star × {formatRupiah(selectedItem.promoPricePerStar)}
+              </p>
+            )}
+            <div className="my-5 border-t border-zinc-800" />
+            <div className="flex items-center justify-between gap-4">
+              <span className="text-sm text-zinc-400">Subtotal</span>
+              <strong className="text-xl text-zinc-50">{formatRupiah(summary.subtotal)}</strong>
+            </div>
+            {summary.bonusStars > 0 && (
+              <p className="mt-3 text-sm text-emerald-300">
+                Bonus paket: +{summary.bonusStars} star
+              </p>
+            )}
+            <div className="mt-5 rounded-xl bg-zinc-950 p-4">
+              <p className="text-xs font-medium text-zinc-300">Reward testimonial Rp5.000</p>
+              <p className="mt-1 text-xs leading-5 text-zinc-500">
+                {summary.testimonialRewardEligible
+                  ? "Subtotal memenuhi ambang. Reward berlaku setelah layanan selesai dan bukti testimonial dikirim; tidak mengurangi subtotal ini."
+                  : "Reward berlaku untuk subtotal di atas Rp20.000 setelah layanan selesai dan bukti testimonial dikirim."}
+              </p>
+            </div>
+          </>
+        ) : (
+          <p className="mt-4 text-sm text-rose-400">Pilih layanan dan jumlah star yang valid untuk melihat subtotal.</p>
+        )}
+        <p className="mt-5 text-xs leading-5 text-zinc-500">
+          Harga mengikuti katalog yang tersedia. Permintaan lintas tier dan detail pengerjaan dikonfirmasi melalui toko.
+        </p>
+      </aside>
+    </form>
+  );
+}
