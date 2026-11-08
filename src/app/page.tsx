@@ -10,7 +10,7 @@ const highlights = [
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen overflow-hidden bg-[#08070d] text-white">
+    <main id="main-content" tabIndex={-1} className="min-h-screen overflow-hidden bg-[#08070d] text-white">
       <SiteHeader />
       <section className="mx-auto w-full max-w-7xl px-4 pb-16 pt-7 sm:px-6 sm:pt-10 lg:px-8">
         <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#130d1c] shadow-[0_25px_100px_rgba(168,85,247,0.12)]">
