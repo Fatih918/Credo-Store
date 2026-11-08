@@ -25,6 +25,7 @@ Node's built-in test runner requests the production Next.js server and checks:
 - Catalog category content and representative detail links.
 - Package detail rendering and order form presence.
 - Unknown package routes return HTTP 404.
+- Shared SEO metadata, skip navigation, landmark order, and accessible section relationships.
 
 The HTTP smoke tests do not open a browser and do not submit a real WhatsApp message. WhatsApp message formatting and URL encoding remain covered by unit tests.
 
@@ -42,7 +43,7 @@ The CI workflow runs:
 Before launch, verify in a real browser:
 - Form interactions, quantity changes, validation errors, and WhatsApp link activation.
 - Mobile and desktop layouts.
-- Keyboard navigation and visible focus.
+- Keyboard navigation, skip navigation, and visible focus.
 - WhatsApp destination and prefilled message, without pressing Send.
 
 A browser automation suite (for example Playwright) can be added when browser-level interaction coverage is required. It is intentionally not represented as implemented by the current smoke tests.
