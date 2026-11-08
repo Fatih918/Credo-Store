@@ -11,9 +11,9 @@ import type { OrderDraft, OrderFieldErrors } from "../types";
 const fieldClassName =
   "mt-2 w-full rounded-xl border border-white/10 bg-[#0c0b12] px-4 py-3 text-sm text-zinc-100 outline-none transition placeholder:text-zinc-600 focus:border-fuchsia-400 focus:ring-2 focus:ring-fuchsia-400/20";
 
-function FieldError({ children }: { children?: string }) {
+function FieldError({ id, children }: { id: string; children?: string }) {
   if (!children) return null;
-  return <p className="mt-1 text-xs text-rose-400">{children}</p>;
+  return <p id={id} role="alert" className="mt-1 text-xs text-rose-400">{children}</p>;
 }
 
 export function OrderForm({ catalogItemId }: { catalogItemId: string }) {
@@ -75,7 +75,7 @@ export function OrderForm({ catalogItemId }: { catalogItemId: string }) {
           <div>
             <label htmlFor="starQuantity" className="text-sm font-medium text-zinc-200">Jumlah star</label>
             <input
-              id="starQuantity"
+              id="starQuantity" aria-invalid={Boolean(errors.starQuantity)} aria-describedby={errors.starQuantity ? "starQuantity-error" : undefined}
               type="number"
               min={1}
               step={1}
@@ -84,7 +84,7 @@ export function OrderForm({ catalogItemId }: { catalogItemId: string }) {
               value={draft.starQuantity}
               onChange={(event) => updateDraft("starQuantity", Number(event.target.value))}
             />
-            <FieldError>{errors.starQuantity}</FieldError>
+            <FieldError id="starQuantity-error">{errors.starQuantity}</FieldError>
             <p className="mt-1 text-xs text-zinc-500">Tidak ada minimum lima star. Masukkan bilangan bulat positif.</p>
           </div>
         ) : null}
@@ -95,37 +95,37 @@ export function OrderForm({ catalogItemId }: { catalogItemId: string }) {
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             <div>
               <label htmlFor="nickname" className="text-sm font-medium text-zinc-200">Nickname</label>
-              <input id="nickname" maxLength={40} className={fieldClassName} value={draft.nickname} onChange={(event) => updateDraft("nickname", event.target.value)} placeholder="Nickname in-game" />
-              <FieldError>{errors.nickname}</FieldError>
+              <input id="nickname" aria-invalid={Boolean(errors.nickname)} aria-describedby={errors.nickname ? "nickname-error" : undefined} maxLength={40} className={fieldClassName} value={draft.nickname} onChange={(event) => updateDraft("nickname", event.target.value)} placeholder="Nickname in-game" />
+              <FieldError id="nickname-error">{errors.nickname}</FieldError>
             </div>
             <div>
               <label htmlFor="userId" className="text-sm font-medium text-zinc-200">User ID</label>
-              <input id="userId" maxLength={30} className={fieldClassName} value={draft.userId} onChange={(event) => updateDraft("userId", event.target.value)} placeholder="Contoh: 123456789" />
-              <FieldError>{errors.userId}</FieldError>
+              <input id="userId" aria-invalid={Boolean(errors.userId)} aria-describedby={errors.userId ? "userId-error" : undefined} maxLength={30} className={fieldClassName} value={draft.userId} onChange={(event) => updateDraft("userId", event.target.value)} placeholder="Contoh: 123456789" />
+              <FieldError id="userId-error">{errors.userId}</FieldError>
             </div>
             <div>
               <label htmlFor="serverId" className="text-sm font-medium text-zinc-200">Server ID</label>
-              <input id="serverId" maxLength={20} className={fieldClassName} value={draft.serverId} onChange={(event) => updateDraft("serverId", event.target.value)} placeholder="Contoh: 1234" />
-              <FieldError>{errors.serverId}</FieldError>
+              <input id="serverId" aria-invalid={Boolean(errors.serverId)} aria-describedby={errors.serverId ? "serverId-error" : undefined} maxLength={20} className={fieldClassName} value={draft.serverId} onChange={(event) => updateDraft("serverId", event.target.value)} placeholder="Contoh: 1234" />
+              <FieldError id="serverId-error">{errors.serverId}</FieldError>
             </div>
             <div>
               <label htmlFor="heroOrRoleRequest" className="text-sm font-medium text-zinc-200">Request hero / role</label>
-              <input id="heroOrRoleRequest" maxLength={120} className={fieldClassName} value={draft.heroOrRoleRequest} onChange={(event) => updateDraft("heroOrRoleRequest", event.target.value)} placeholder="Opsional" />
-              <FieldError>{errors.heroOrRoleRequest}</FieldError>
+              <input id="heroOrRoleRequest" aria-invalid={Boolean(errors.heroOrRoleRequest)} aria-describedby={errors.heroOrRoleRequest ? "heroOrRoleRequest-error" : undefined} maxLength={120} className={fieldClassName} value={draft.heroOrRoleRequest} onChange={(event) => updateDraft("heroOrRoleRequest", event.target.value)} placeholder="Opsional" />
+              <FieldError id="heroOrRoleRequest-error">{errors.heroOrRoleRequest}</FieldError>
             </div>
           </div>
         </div>
 
         <div>
           <label htmlFor="winRateOrStreakRequest" className="text-sm font-medium text-zinc-200">Request win rate / win streak</label>
-          <textarea id="winRateOrStreakRequest" rows={2} maxLength={160} className={fieldClassName} value={draft.winRateOrStreakRequest} onChange={(event) => updateDraft("winRateOrStreakRequest", event.target.value)} placeholder="Permintaan dikonfirmasi berdasarkan kondisi pertandingan." />
-          <FieldError>{errors.winRateOrStreakRequest}</FieldError>
+          <textarea id="winRateOrStreakRequest" aria-invalid={Boolean(errors.winRateOrStreakRequest)} aria-describedby={errors.winRateOrStreakRequest ? "winRateOrStreakRequest-error" : undefined} rows={2} maxLength={160} className={fieldClassName} value={draft.winRateOrStreakRequest} onChange={(event) => updateDraft("winRateOrStreakRequest", event.target.value)} placeholder="Permintaan dikonfirmasi berdasarkan kondisi pertandingan." />
+          <FieldError id="winRateOrStreakRequest-error">{errors.winRateOrStreakRequest}</FieldError>
         </div>
 
         <div>
           <label htmlFor="notes" className="text-sm font-medium text-zinc-200">Catatan tambahan</label>
-          <textarea id="notes" rows={3} maxLength={500} className={fieldClassName} value={draft.notes} onChange={(event) => updateDraft("notes", event.target.value)} placeholder="Tulis informasi tambahan (opsional)." />
-          <FieldError>{errors.notes}</FieldError>
+          <textarea id="notes" aria-invalid={Boolean(errors.notes)} aria-describedby={errors.notes ? "notes-error" : undefined} rows={3} maxLength={500} className={fieldClassName} value={draft.notes} onChange={(event) => updateDraft("notes", event.target.value)} placeholder="Tulis informasi tambahan (opsional)." />
+          <FieldError id="notes-error">{errors.notes}</FieldError>
         </div>
 
         <p className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-3 text-xs leading-5 text-amber-200/80">

@@ -44,19 +44,34 @@
 - [ ] UI says customer must press Send in WhatsApp.
 - [ ] No message is sent in the background.
 
-## Responsive and accessibility
+## Accessibility
+- [ ] Document language is Indonesian.
+- [ ] Every route exposes one main landmark with a stable skip-navigation target.
+- [ ] A keyboard user can reach the skip link and see visible focus indicators.
+- [ ] Navigation has an accessible label.
+- [ ] Catalog groups and package detail sections have programmatic headings.
+- [ ] Form controls have associated labels and errors remain readable.
+- [ ] Informative images have meaningful alternative text; decorative images use empty alt text.
+- [ ] Text and controls have sufficient contrast.
+- [ ] Reduced-motion preferences are respected.
+
+## SEO and sharing
+- [ ] Each route has a meaningful title and description.
+- [ ] Shared metadata includes Open Graph and Twitter card basics.
+- [ ] The store icon is exposed through metadata.
+- [ ] Public pages are indexable; invalid package pages are not indexable.
+- [ ] Canonical URLs, sitemap, and absolute social preview images are configured only after the production domain is known.
+
+## Responsive
 - [ ] Primary flow works on narrow mobile screens without horizontal overflow.
 - [ ] Desktop layout remains readable.
-- [ ] Controls have labels and keyboard focus states.
-- [ ] Text and controls have sufficient contrast.
-- [ ] Reduced-motion preferences are respected if animation is used.
 
 ## Automated quality gates
 - [ ] Typecheck passes.
 - [ ] Lint passes.
 - [ ] Unit tests cover pricing, testimonial eligibility, currency, and WhatsApp URL generation.
 - [ ] Order form render tests cover per-star, fixed-package, and tier-progression initial states.
-- [ ] Production HTTP smoke tests cover Home, catalog, package detail, and unknown-package 404.
+- [ ] Production HTTP smoke tests cover Home, catalog, package detail, metadata, accessibility landmarks, and unknown-package 404.
 - [ ] Production build succeeds.
 - [ ] Tests never send a real WhatsApp message.
 
@@ -65,7 +80,7 @@
 - [ ] Invalid form data blocks WhatsApp handoff.
 - [ ] Validated form opens the correct prefilled WhatsApp URL.
 - [ ] Mobile and desktop layouts are checked in a real browser.
-- [ ] Keyboard navigation, focus visibility, and contrast are reviewed.
+- [ ] Keyboard navigation, focus visibility, and contrast are reviewed with keyboard and accessibility tooling.
 
 ## MVP boundaries
 - [ ] No database/order persistence.

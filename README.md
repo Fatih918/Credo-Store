@@ -45,6 +45,7 @@ npm run check
 - `docs/pricing-rules.md` — catalog, pricing, and promotion rules
 - `docs/acceptance-tests.md` — verifiable acceptance criteria
 - `docs/testing-strategy.md` — automated coverage and remaining manual QA
+- `docs/accessibility-seo.md` — accessibility and SEO implementation, plus domain-dependent follow-up
 - `docs/storefront-pages.md` — route and storefront behavior
 
 ## Store information
