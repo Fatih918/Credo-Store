@@ -49,6 +49,7 @@ function originalFor(item: CatalogItem) {
 }
 
 function descriptionFor(item: CatalogItem) {
+  if (item.cardDescription) return item.cardDescription;
   if (item.category === "per-star") {
     return `Layanan penambahan star untuk tier ${item.name}. Harga dihitung berdasarkan jumlah star yang kamu masukkan pada formulir pesanan.`;
   }
