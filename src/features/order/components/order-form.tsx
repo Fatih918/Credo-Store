@@ -46,7 +46,7 @@ export function OrderForm({ item }: { item: CatalogItem }) {
   const whatsappUrl = useMemo(() => {
     if (!validated || !summary) return null;
     try {
-      return buildWhatsAppUrl(buildWhatsAppMessage(draft, summary));
+      return buildWhatsAppUrl(buildWhatsAppMessage(draft, summary, item));
     } catch {
       return null;
     }
@@ -54,7 +54,7 @@ export function OrderForm({ item }: { item: CatalogItem }) {
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const nextErrors = validateOrderDraft(draft);
+    const nextErrors = validateOrderDraft(draft, item);
     setErrors(nextErrors);
     setValidated(!hasOrderErrors(nextErrors));
   }
