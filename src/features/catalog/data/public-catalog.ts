@@ -66,6 +66,7 @@ function mapSubcategory(row: SubcategoryRow): CatalogItem {
       price: Number(row.promo_price),
       ...(row.original_price === null ? {} : { originalPrice: Number(row.original_price) }),
       ...(row.description ? { description: row.description } : {}),
+      ...(row.included_quantity === null ? {} : { includedQuantity: row.included_quantity }),
     };
     return item;
   }
@@ -76,6 +77,8 @@ function mapSubcategory(row: SubcategoryRow): CatalogItem {
     name: row.name,
     price: Number(row.promo_price),
     bonusStars: row.bonus_quantity,
+    ...(row.source_rank ? { sourceRank: row.source_rank } : {}),
+    ...(row.target_rank ? { targetRank: row.target_rank } : {}),
     ...(row.is_featured ? { featured: "best-seller" } : {}),
   };
   return item;
