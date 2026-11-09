@@ -16,11 +16,15 @@ export interface SubcategoryDraft {
   bandMin: number | null;
   bandMax: number | null;
   isFeatured: boolean;
+  cardImageUrl: string;
+  cardBadge: string;
+  cardDescription: string;
   sortOrder: number;
 }
 
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+const CARD_IMAGE_PATH_PATTERN = /^\/img\/[A-Za-z0-9._/-]+$/;
 
 export function isValidSubcategoryId(value: string): boolean {
   return UUID_PATTERN.test(value);
@@ -33,6 +37,9 @@ export function validateSubcategoryDraft(draft: SubcategoryDraft): string[] {
   if (!draft.name.trim() || draft.name.length > 120) errors.push("name");
   if (!SLUG_PATTERN.test(draft.slug) || draft.slug.length > 120) errors.push("slug");
   if (draft.description.length > 1000) errors.push("description");
+  if (draft.cardImageUrl && (draft.cardImageUrl.length > 500 || !CARD_IMAGE_PATH_PATTERN.test(draft.cardImageUrl) || draft.cardImageUrl.split("/").includes(".."))) errors.push("cardImageUrl");
+  if (draft.cardBadge.length > 40) errors.push("cardBadge");
+  if (draft.cardDescription.length > 240) errors.push("cardDescription");
   if (!PRICING_TYPES.includes(draft.pricingType)) errors.push("pricingType");
   if (!Number.isSafeInteger(draft.promoPrice) || draft.promoPrice < 0) errors.push("promoPrice");
   if (draft.originalPrice !== null && (!Number.isSafeInteger(draft.originalPrice) || draft.originalPrice < 0)) errors.push("originalPrice");
