@@ -1,11 +1,8 @@
-import { catalogItems } from "../catalog/data/catalog";
+import type { CatalogItem } from "../catalog/types";
 import {
-  calculateFixedPackagePrice,
-  calculatePerStarPrice,
-  calculateTierProgressionPrice,
   isTestimonialRewardEligible,
+  type PriceCalculation,
 } from "../pricing/pricing";
-import type { PriceCalculation } from "../pricing/pricing";
 
 export type OrderPriceSummary = PriceCalculation & {
   readonly itemName: string;
@@ -14,27 +11,31 @@ export type OrderPriceSummary = PriceCalculation & {
 };
 
 export function calculateOrderSummary(
-  catalogItemId: string,
+  item: CatalogItem,
   starQuantity: number,
 ): OrderPriceSummary {
-  const item = catalogItems.find((candidate) => candidate.id === catalogItemId);
-
-  if (!item) {
-    throw new RangeError(`Layanan tidak ditemukan: ${catalogItemId}`);
-  }
-
   let calculation: PriceCalculation;
 
   switch (item.category) {
     case "per-star":
-      calculation = calculatePerStarPrice(item.id, starQuantity);
+      if (!Number.isSafeInteger(starQuantity) || starQuantity <= 0) {
+        throw new RangeError("Jumlah star harus berupa bilangan bulat positif.");
+      }
+      calculation = {
+        subtotal: item.promoPricePerStar * starQuantity,
+        bonusStars: 0,
+      };
       break;
     case "fixed-package":
-      calculation = calculateFixedPackagePrice(item.id);
+      calculation = { subtotal: item.price, bonusStars: 0 };
       break;
     case "tier-progression":
-      calculation = calculateTierProgressionPrice(item.id);
+      calculation = { subtotal: item.price, bonusStars: item.bonusStars };
       break;
+  }
+
+  if (!Number.isSafeInteger(calculation.subtotal) || calculation.subtotal < 0) {
+    throw new RangeError("Harga katalog tidak valid.");
   }
 
   return {
@@ -46,8 +47,6 @@ export function calculateOrderSummary(
         : item.category === "fixed-package"
           ? "Paket harga tetap"
           : "Paket tier progression",
-    testimonialRewardEligible: isTestimonialRewardEligible(
-      calculation.subtotal,
-    ),
+    testimonialRewardEligible: isTestimonialRewardEligible(calculation.subtotal),
   };
 }
