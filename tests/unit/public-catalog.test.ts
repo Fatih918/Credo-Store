@@ -99,6 +99,7 @@ describe("mapPublicCatalogRows", () => {
         name: "10 Stars Epic",
         price: 40000,
         description: "Paket sepuluh star.",
+        includedQuantity: 10,
       },
     ]);
   });
@@ -137,6 +138,8 @@ describe("mapPublicCatalogRows", () => {
       category: "tier-progression",
       price: 235000,
       bonusStars: 1,
+      sourceRank: "Epic V",
+      targetRank: "Mythic",
       featured: "best-seller",
     });
   });
