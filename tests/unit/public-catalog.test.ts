@@ -134,6 +134,9 @@ describe("mapPublicCatalogRows", () => {
         band_min: null,
         band_max: null,
         is_featured: true,
+        card_image_url: "/img/progression.png",
+        card_badge: "LIMITED",
+        card_description: "Copy progression custom",
         is_active: true,
         sort_order: 1,
       }],
@@ -147,6 +150,9 @@ describe("mapPublicCatalogRows", () => {
       sourceRank: "Epic V",
       targetRank: "Mythic",
       featured: "best-seller",
+      cardImageUrl: "/img/progression.png",
+      cardBadge: "LIMITED",
+      cardDescription: "Copy progression custom",
     });
   });
 
