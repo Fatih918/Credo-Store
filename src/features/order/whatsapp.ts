@@ -1,6 +1,7 @@
 import { formatRupiah } from "../../lib/currency";
 import { hasOrderErrors, validateOrderDraft } from "./validation";
 import type { OrderDraft } from "./types";
+import type { CatalogItem } from "../catalog/types";
 import type { OrderPriceSummary } from "./order-pricing";
 import { storeConfig } from "../../config/store";
 
@@ -9,8 +10,8 @@ function appendOptionalLine(lines: string[], label: string, value: string) {
   if (normalized) lines.push(`${label}: ${normalized}`);
 }
 
-export function buildWhatsAppMessage(draft: OrderDraft, summary: OrderPriceSummary): string {
-  const errors = validateOrderDraft(draft);
+export function buildWhatsAppMessage(draft: OrderDraft, summary: OrderPriceSummary, item?: CatalogItem): string {
+  const errors = validateOrderDraft(draft, item);
   if (hasOrderErrors(errors)) {
     throw new RangeError("Pesanan harus valid sebelum dibuatkan pesan WhatsApp.");
   }
