@@ -50,7 +50,7 @@ export function OrderForm({ item }: { item: CatalogItem }) {
     } catch {
       return null;
     }
-  }, [draft, summary, validated]);
+  }, [draft, item, summary, validated]);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
