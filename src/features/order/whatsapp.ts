@@ -1,4 +1,3 @@
-import { catalogItems } from "../catalog/data/catalog";
 import { formatRupiah } from "../../lib/currency";
 import { hasOrderErrors, validateOrderDraft } from "./validation";
 import type { OrderDraft } from "./types";
@@ -10,18 +9,10 @@ function appendOptionalLine(lines: string[], label: string, value: string) {
   if (normalized) lines.push(`${label}: ${normalized}`);
 }
 
-export function buildWhatsAppMessage(
-  draft: OrderDraft,
-  summary: OrderPriceSummary,
-): string {
+export function buildWhatsAppMessage(draft: OrderDraft, summary: OrderPriceSummary): string {
   const errors = validateOrderDraft(draft);
   if (hasOrderErrors(errors)) {
     throw new RangeError("Pesanan harus valid sebelum dibuatkan pesan WhatsApp.");
-  }
-
-  const item = catalogItems.find((candidate) => candidate.id === draft.catalogItemId);
-  if (!item) {
-    throw new RangeError("Layanan pesanan tidak ditemukan.");
   }
 
   const lines = [
@@ -30,7 +21,7 @@ export function buildWhatsAppMessage(
     `Layanan: ${summary.itemName}`,
   ];
 
-  if (item.category === "per-star") {
+  if (summary.itemCategory === "per-star") {
     lines.push(`Jumlah: ${draft.starQuantity} star`);
   }
 
@@ -43,14 +34,9 @@ export function buildWhatsAppMessage(
 
   lines.push("", `Estimasi subtotal: ${formatRupiah(summary.subtotal)}`);
 
-  if (summary.bonusStars > 0) {
-    lines.push(`Bonus paket: +${summary.bonusStars} star`);
-  }
-
+  if (summary.bonusStars > 0) lines.push(`Bonus paket: +${summary.bonusStars} star`);
   if (summary.testimonialRewardEligible) {
-    lines.push(
-      "Info reward: subtotal memenuhi syarat reward testimonial Rp5.000 setelah layanan selesai dan bukti testimonial dikirim. Reward tidak memotong subtotal.",
-    );
+    lines.push("Info reward: subtotal memenuhi syarat reward testimonial Rp5.000 setelah layanan selesai dan bukti testimonial dikirim. Reward tidak memotong subtotal.");
   }
 
   lines.push(
@@ -59,7 +45,6 @@ export function buildWhatsAppMessage(
     "",
     "Catatan: pesan ini belum terkirim. Saya akan menekan tombol Kirim di WhatsApp setelah memeriksa detailnya.",
   );
-
   return lines.join("\n");
 }
 
