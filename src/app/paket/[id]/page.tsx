@@ -70,7 +70,7 @@ export default async function PackageDetailPage({ params }: { params: Promise<{ 
     return (
       <>
         <SiteHeader />
-        <main className="min-h-screen bg-[#08070d] px-4 py-16 text-white">
+        <main id="main-content" tabIndex={-1} className="min-h-screen bg-[#08070d] px-4 py-16 text-white">
           <div className="mx-auto max-w-2xl rounded-2xl border border-amber-400/20 bg-amber-400/5 p-6">
             <h1 className="text-xl font-bold">Detail paket belum tersedia</h1>
             <p className="mt-2 text-sm text-zinc-400">Katalog sedang tidak dapat dimuat. Silakan coba kembali nanti.</p>
