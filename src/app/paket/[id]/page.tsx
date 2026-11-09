@@ -3,23 +3,21 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SiteHeader } from "@/components/site-header";
-import { catalogItems } from "@/features/catalog/data/catalog";
+import { getPublicCatalog } from "@/features/catalog/data/public-catalog";
 import type { CatalogItem } from "@/features/catalog/types";
 import { getRankArtwork } from "@/features/catalog/rank-artwork";
 import { formatRupiah } from "@/lib/currency";
 import { OrderForm } from "@/features/order/components/order-form";
 
-function getItem(id: string): CatalogItem | undefined {
-  return catalogItems.find((item) => item.id === id);
-}
-
-export function generateStaticParams() {
-  return catalogItems.map((item) => ({ id: item.id }));
+async function getItem(slug: string): Promise<CatalogItem | undefined> {
+  const catalog = await getPublicCatalog();
+  if (catalog.status !== "ready") return undefined;
+  return catalog.items.find((item) => item.id === slug);
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;
-  const item = getItem(id);
+  const item = await getItem(id);
   if (!item) return { title: "Paket tidak ditemukan", robots: { index: false, follow: false } };
 
   const pageTitle = `${item.name} | Credo Store`;
@@ -34,11 +32,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
       title: pageTitle,
       description,
     },
-    twitter: {
-      card: "summary",
-      title: pageTitle,
-      description,
-    },
+    twitter: { card: "summary", title: pageTitle, description },
   };
 }
 
@@ -59,15 +53,37 @@ function descriptionFor(item: CatalogItem) {
     return `Layanan penambahan star untuk tier ${item.name}. Harga dihitung berdasarkan jumlah star yang kamu masukkan pada formulir pesanan.`;
   }
   if (item.category === "fixed-package") {
-    return item.description ?? `Paket ${item.name} dengan harga tetap sesuai katalog Credo Store.`;
+    return item.description ?? (item.includedQuantity
+      ? `Paket ${item.name} termasuk ${item.includedQuantity} unit.`
+      : `Paket ${item.name} dengan harga tetap sesuai katalog Credo Store.`);
   }
-  return `Layanan progression dari ${item.name}. Paket ini mencakup bonus +${item.bonusStars} star.`;
+  const route = item.sourceRank && item.targetRank
+    ? `dari ${item.sourceRank} ke ${item.targetRank}`
+    : item.name;
+  return `Layanan progression ${route}. Paket ini mencakup bonus +${item.bonusStars} star.`;
 }
 
 export default async function PackageDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const item = getItem(id);
+  const catalog = await getPublicCatalog();
+  if (catalog.status !== "ready") {
+    return (
+      <>
+        <SiteHeader />
+        <main id="main-content" tabIndex={-1} className="min-h-screen bg-[#08070d] px-4 py-16 text-white">
+          <div className="mx-auto max-w-2xl rounded-2xl border border-amber-400/20 bg-amber-400/5 p-6">
+            <h1 className="text-xl font-bold">Detail paket belum tersedia</h1>
+            <p className="mt-2 text-sm text-zinc-400">Katalog sedang tidak dapat dimuat. Silakan coba kembali nanti.</p>
+            <Link href="/paket" className="mt-5 inline-block text-sm font-semibold text-fuchsia-300">Kembali ke pilihan paket</Link>
+          </div>
+        </main>
+      </>
+    );
+  }
+
+  const item = catalog.items.find((candidate) => candidate.id === id);
   if (!item) notFound();
+
   const originalPrice = originalFor(item);
   const artwork = getRankArtwork(item);
 
@@ -82,14 +98,7 @@ export default async function PackageDetailPage({ params }: { params: Promise<{ 
               <p className="text-xs font-bold tracking-[0.2em] text-fuchsia-300">DETAIL PAKET</p>
               {artwork ? (
                 <div className="mx-auto mt-4 flex h-52 w-full max-w-[260px] items-center justify-center">
-                  <Image
-                    src={artwork.src}
-                    alt={artwork.alt}
-                    width={260}
-                    height={260}
-                    className="h-full w-full object-contain drop-shadow-[0_10px_30px_rgba(168,85,247,0.18)]"
-                    priority
-                  />
+                  <Image src={artwork.src} alt={artwork.alt} width={260} height={260} className="h-full w-full object-contain drop-shadow-[0_10px_30px_rgba(168,85,247,0.18)]" priority />
                 </div>
               ) : null}
               <h1 id="package-title" className="mt-4 text-2xl font-black sm:text-3xl">{item.name}</h1>
@@ -111,7 +120,7 @@ export default async function PackageDetailPage({ params }: { params: Promise<{ 
                 <h2 id="order-form-title" className="mt-2 text-2xl font-bold">Form pemesanan</h2>
                 <p className="mt-2 text-sm text-zinc-400">Periksa layanan dan isi informasi yang ingin kamu sampaikan.</p>
               </div>
-              <OrderForm catalogItemId={item.id} />
+              <OrderForm item={item} />
             </section>
           </div>
         </div>

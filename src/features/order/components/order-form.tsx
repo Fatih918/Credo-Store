@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState, type FormEvent } from "react";
-import { catalogItems } from "../../catalog/data/catalog";
+import type { CatalogItem } from "../../catalog/types";
 import { formatRupiah } from "@/lib/currency";
 import { calculateOrderSummary } from "../order-pricing";
 import { buildWhatsAppMessage, buildWhatsAppUrl } from "../whatsapp";
@@ -16,9 +16,9 @@ function FieldError({ id, children }: { id: string; children?: string }) {
   return <p id={id} role="alert" className="mt-1 text-xs text-rose-400">{children}</p>;
 }
 
-export function OrderForm({ catalogItemId }: { catalogItemId: string }) {
+export function OrderForm({ item }: { item: CatalogItem }) {
   const [draft, setDraft] = useState<OrderDraft>(() => ({
-    catalogItemId,
+    catalogItemId: item.id,
     starQuantity: 1,
     nickname: "",
     userId: "",
@@ -30,14 +30,13 @@ export function OrderForm({ catalogItemId }: { catalogItemId: string }) {
   const [errors, setErrors] = useState<OrderFieldErrors>({});
   const [validated, setValidated] = useState(false);
 
-  const selectedItem = catalogItems.find((item) => item.id === catalogItemId);
   const summary = useMemo(() => {
     try {
-      return calculateOrderSummary(catalogItemId, draft.starQuantity);
+      return calculateOrderSummary(item, draft.starQuantity);
     } catch {
       return null;
     }
-  }, [catalogItemId, draft.starQuantity]);
+  }, [item, draft.starQuantity]);
 
   function updateDraft<K extends keyof OrderDraft>(field: K, value: OrderDraft[K]) {
     setDraft((current) => ({ ...current, [field]: value }));
@@ -47,40 +46,34 @@ export function OrderForm({ catalogItemId }: { catalogItemId: string }) {
   const whatsappUrl = useMemo(() => {
     if (!validated || !summary) return null;
     try {
-      return buildWhatsAppUrl(buildWhatsAppMessage(draft, summary));
+      return buildWhatsAppUrl(buildWhatsAppMessage(draft, summary, item));
     } catch {
       return null;
     }
-  }, [draft, summary, validated]);
+  }, [draft, item, summary, validated]);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const nextErrors = validateOrderDraft(draft);
+    const nextErrors = validateOrderDraft(draft, item);
     setErrors(nextErrors);
     setValidated(!hasOrderErrors(nextErrors));
   }
-
-  if (!selectedItem) return null;
 
   return (
     <form onSubmit={handleSubmit} noValidate className="grid gap-5">
       <section className="space-y-5 rounded-2xl border border-white/10 bg-[#111019] p-5 sm:p-6">
         <div>
           <p className="text-xs font-semibold tracking-[0.18em] text-fuchsia-300">01 / LAYANAN DIPILIH</p>
-          <h3 className="mt-2 text-lg font-bold text-white">{selectedItem.name}</h3>
+          <h3 className="mt-2 text-lg font-bold text-white">{item.name}</h3>
           <p className="mt-1 text-xs text-zinc-500">Paket dikunci sesuai halaman detail yang sedang dibuka.</p>
         </div>
 
-        {selectedItem.category === "per-star" ? (
+        {item.category === "per-star" ? (
           <div>
             <label htmlFor="starQuantity" className="text-sm font-medium text-zinc-200">Jumlah star</label>
             <input
               id="starQuantity" aria-invalid={Boolean(errors.starQuantity)} aria-describedby={errors.starQuantity ? "starQuantity-error" : undefined}
-              type="number"
-              min={1}
-              step={1}
-              inputMode="numeric"
-              className={fieldClassName}
+              type="number" min={1} step={1} inputMode="numeric" className={fieldClassName}
               value={draft.starQuantity}
               onChange={(event) => updateDraft("starQuantity", Number(event.target.value))}
             />
@@ -156,8 +149,8 @@ export function OrderForm({ catalogItemId }: { catalogItemId: string }) {
           <>
             <p className="mt-4 text-sm text-zinc-400">{summary.categoryLabel}</p>
             <p className="mt-1 font-medium text-zinc-100">{summary.itemName}</p>
-            {selectedItem.category === "per-star" ? (
-              <p className="mt-1 text-sm text-zinc-400">{draft.starQuantity} star × {formatRupiah(selectedItem.promoPricePerStar)}</p>
+            {item.category === "per-star" ? (
+              <p className="mt-1 text-sm text-zinc-400">{draft.starQuantity} star × {formatRupiah(item.promoPricePerStar)}</p>
             ) : null}
             <div className="my-5 border-t border-white/10" />
             <div className="flex items-center justify-between gap-4">

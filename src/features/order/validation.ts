@@ -1,4 +1,5 @@
 import { catalogItems } from "../catalog/data/catalog";
+import type { CatalogItem } from "../catalog/types";
 import type { OrderDraft, OrderFieldErrors } from "./types";
 
 const MAX_LENGTHS = {
@@ -10,15 +11,13 @@ const MAX_LENGTHS = {
   notes: 500,
 } as const;
 
-export function validateOrderDraft(draft: OrderDraft): OrderFieldErrors {
+export function validateOrderDraft(draft: OrderDraft, catalogItem?: CatalogItem): OrderFieldErrors {
   const errors: OrderFieldErrors = {};
-  const selectedItem = catalogItems.find(
-    (item) => item.id === draft.catalogItemId,
-  );
+  const selectedItem = catalogItem
+    ? (catalogItem.id === draft.catalogItemId ? catalogItem : undefined)
+    : catalogItems.find((item) => item.id === draft.catalogItemId);
 
-  if (!selectedItem) {
-    errors.catalogItemId = "Pilih layanan yang tersedia.";
-  }
+  if (!selectedItem) errors.catalogItemId = "Pilih layanan yang tersedia.";
 
   if (
     selectedItem?.category === "per-star" &&
@@ -29,11 +28,7 @@ export function validateOrderDraft(draft: OrderDraft): OrderFieldErrors {
 
   for (const [field, maxLength] of Object.entries(MAX_LENGTHS)) {
     const value = draft[field as keyof typeof MAX_LENGTHS];
-
-    if (value.length > maxLength) {
-      errors[field as keyof typeof MAX_LENGTHS] =
-        `Maksimal ${maxLength} karakter.`;
-    }
+    if (value.length > maxLength) errors[field as keyof typeof MAX_LENGTHS] = `Maksimal ${maxLength} karakter.`;
   }
 
   return errors;

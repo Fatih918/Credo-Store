@@ -1,14 +1,12 @@
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
+import { fixedPackages, perStarServices, tierProgressions } from "../../src/features/catalog/data/catalog";
 import { OrderForm } from "../../src/features/order/components/order-form";
 
 describe("OrderForm", () => {
   it("renders per-star quantity, account detail fields, and initial subtotal", () => {
-    const markup = renderToStaticMarkup(
-      createElement(OrderForm, { catalogItemId: "epic" }),
-    );
-
+    const markup = renderToStaticMarkup(createElement(OrderForm, { item: perStarServices[1] }));
     expect(markup).toContain("Jumlah star");
     expect(markup).toContain('id="starQuantity"');
     expect(markup).toContain("Nickname");
@@ -20,10 +18,7 @@ describe("OrderForm", () => {
   });
 
   it("renders fixed-package pricing without a star quantity input", () => {
-    const markup = renderToStaticMarkup(
-      createElement(OrderForm, { catalogItemId: "epic-10-stars" }),
-    );
-
+    const markup = renderToStaticMarkup(createElement(OrderForm, { item: fixedPackages[1] }));
     expect(markup).toContain("10 Stars Epic");
     expect(markup).toContain("40.000");
     expect(markup).not.toContain('id="starQuantity"');
@@ -31,10 +26,7 @@ describe("OrderForm", () => {
   });
 
   it("renders tier progression bonus information in the order summary", () => {
-    const markup = renderToStaticMarkup(
-      createElement(OrderForm, { catalogItemId: "epic-v-to-mythic" }),
-    );
-
+    const markup = renderToStaticMarkup(createElement(OrderForm, { item: tierProgressions[2] }));
     expect(markup).toContain("Epic V → Mythic");
     expect(markup).toContain("Bonus paket: +1 star");
     expect(markup).toContain("235.000");

@@ -49,8 +49,8 @@ export function CatalogCard({ item }: { item: CatalogItem }) {
         </div>
       ) : null}
       <h3 className="relative mt-3 text-lg font-bold text-white">{item.name}</h3>
-      {item.category === "fixed-package" && item.description ? (
-        <p className="relative mt-2 text-sm text-zinc-400">{item.description}</p>
+      {item.category === "fixed-package" && (item.description || item.includedQuantity) ? (
+        <p className="relative mt-2 text-sm text-zinc-400">{item.description ?? `Termasuk ${item.includedQuantity} unit.`}</p>
       ) : null}
       {item.category === "per-star" && item.suppliedBand ? (
         <p className="relative mt-2 text-sm text-zinc-400">{item.suppliedBand}</p>

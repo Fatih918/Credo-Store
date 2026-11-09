@@ -1,53 +1,45 @@
-import { catalogItems } from "../catalog/data/catalog";
-import {
-  calculateFixedPackagePrice,
-  calculatePerStarPrice,
-  calculateTierProgressionPrice,
-  isTestimonialRewardEligible,
-} from "../pricing/pricing";
-import type { PriceCalculation } from "../pricing/pricing";
+import type { CatalogItem } from "../catalog/types";
+import { isTestimonialRewardEligible, type PriceCalculation } from "../pricing/pricing";
 
 export type OrderPriceSummary = PriceCalculation & {
   readonly itemName: string;
+  readonly itemCategory: CatalogItem["category"];
   readonly categoryLabel: string;
   readonly testimonialRewardEligible: boolean;
 };
 
-export function calculateOrderSummary(
-  catalogItemId: string,
-  starQuantity: number,
-): OrderPriceSummary {
-  const item = catalogItems.find((candidate) => candidate.id === catalogItemId);
-
-  if (!item) {
-    throw new RangeError(`Layanan tidak ditemukan: ${catalogItemId}`);
-  }
-
+export function calculateOrderSummary(item: CatalogItem, starQuantity: number): OrderPriceSummary {
   let calculation: PriceCalculation;
 
   switch (item.category) {
     case "per-star":
-      calculation = calculatePerStarPrice(item.id, starQuantity);
+      if (!Number.isSafeInteger(starQuantity) || starQuantity <= 0) {
+        throw new RangeError("Jumlah star harus berupa bilangan bulat positif.");
+      }
+      calculation = { subtotal: item.promoPricePerStar * starQuantity, bonusStars: 0 };
       break;
     case "fixed-package":
-      calculation = calculateFixedPackagePrice(item.id);
+      calculation = { subtotal: item.price, bonusStars: 0 };
       break;
     case "tier-progression":
-      calculation = calculateTierProgressionPrice(item.id);
+      calculation = { subtotal: item.price, bonusStars: item.bonusStars };
       break;
+  }
+
+  if (!Number.isSafeInteger(calculation.subtotal) || calculation.subtotal < 0) {
+    throw new RangeError("Harga katalog tidak valid.");
   }
 
   return {
     ...calculation,
     itemName: item.name,
+    itemCategory: item.category,
     categoryLabel:
       item.category === "per-star"
         ? "Harga per star"
         : item.category === "fixed-package"
           ? "Paket harga tetap"
           : "Paket tier progression",
-    testimonialRewardEligible: isTestimonialRewardEligible(
-      calculation.subtotal,
-    ),
+    testimonialRewardEligible: isTestimonialRewardEligible(calculation.subtotal),
   };
 }

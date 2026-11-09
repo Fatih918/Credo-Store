@@ -3,7 +3,7 @@ export type PerStarService = {
   readonly category: "per-star";
   readonly name: string;
   readonly promoPricePerStar: number;
-  readonly originalPricePerStar: number;
+  readonly originalPricePerStar?: number;
   readonly suppliedBand?: string;
 };
 
@@ -14,6 +14,7 @@ export type FixedPackage = {
   readonly price: number;
   readonly originalPrice?: number;
   readonly description?: string;
+  readonly includedQuantity?: number;
 };
 
 export type TierProgressionPackage = {
@@ -22,6 +23,8 @@ export type TierProgressionPackage = {
   readonly name: string;
   readonly price: number;
   readonly bonusStars: number;
+  readonly sourceRank?: string;
+  readonly targetRank?: string;
   readonly featured?: "best-seller";
 };
 
