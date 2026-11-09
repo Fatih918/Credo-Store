@@ -39,12 +39,16 @@ function readDraft(formData: FormData): SubcategoryDraft {
     pricingType,
     promoPrice: requiredInteger(textValue(formData, "promoPrice")),
     originalPrice: optionalInteger(textValue(formData, "originalPrice")),
-    includedQuantity: optionalInteger(textValue(formData, "includedQuantity")),
-    bonusQuantity: Number(textValue(formData, "bonusQuantity") || "0"),
-    sourceRank: textValue(formData, "sourceRank"),
-    targetRank: textValue(formData, "targetRank"),
-    bandMin: optionalInteger(textValue(formData, "bandMin")),
-    bandMax: optionalInteger(textValue(formData, "bandMax")),
+    includedQuantity: pricingType === "fixed"
+      ? optionalInteger(textValue(formData, "includedQuantity"))
+      : null,
+    bonusQuantity: pricingType === "tier_progression"
+      ? Number(textValue(formData, "bonusQuantity") || "0")
+      : 0,
+    sourceRank: pricingType === "tier_progression" ? textValue(formData, "sourceRank") : "",
+    targetRank: pricingType === "tier_progression" ? textValue(formData, "targetRank") : "",
+    bandMin: pricingType === "per_star" ? optionalInteger(textValue(formData, "bandMin")) : null,
+    bandMax: pricingType === "per_star" ? optionalInteger(textValue(formData, "bandMax")) : null,
     isFeatured: textValue(formData, "isFeatured") === "true",
     sortOrder: Number(textValue(formData, "sortOrder") || "0"),
   };
