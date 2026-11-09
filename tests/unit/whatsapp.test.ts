@@ -51,7 +51,7 @@ describe("WhatsApp order message", () => {
 
   it("accepts a new database catalog item without a static catalog entry", () => {
     const item = { ...perStarServices[1], id: "new-service-from-db", name: "New Service" };
-    const newDraft = { ...draft, catalogItemId: item.id };
+    const newDraft = { ...draft, catalogItemId: item.id, starQuantity: 2 };
     const message = buildWhatsAppMessage(newDraft, calculateOrderSummary(item, 2), item);
     expect(message).toContain("Layanan: New Service");
     expect(message).toContain("Jumlah: 2 star");
