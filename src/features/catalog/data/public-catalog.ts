@@ -19,6 +19,9 @@ type SubcategoryRow = {
   band_min: number | null;
   band_max: number | null;
   is_featured: boolean;
+  card_image_url?: string | null;
+  card_badge?: string | null;
+  card_description?: string | null;
   is_active: boolean;
   sort_order: number;
 };
@@ -49,6 +52,9 @@ function mapSubcategory(row: SubcategoryRow): CatalogItem {
       id: row.slug,
       category: "per-star",
       name: row.name,
+      ...(row.card_image_url ? { cardImageUrl: row.card_image_url } : {}),
+      ...(row.card_badge ? { cardBadge: row.card_badge } : {}),
+      ...(row.card_description ? { cardDescription: row.card_description } : {}),
       promoPricePerStar: Number(row.promo_price),
       ...(row.original_price === null ? {} : { originalPricePerStar: Number(row.original_price) }),
       ...(row.band_min === null && row.band_max === null
@@ -63,6 +69,9 @@ function mapSubcategory(row: SubcategoryRow): CatalogItem {
       id: row.slug,
       category: "fixed-package",
       name: row.name,
+      ...(row.card_image_url ? { cardImageUrl: row.card_image_url } : {}),
+      ...(row.card_badge ? { cardBadge: row.card_badge } : {}),
+      ...(row.card_description ? { cardDescription: row.card_description } : {}),
       price: Number(row.promo_price),
       ...(row.original_price === null ? {} : { originalPrice: Number(row.original_price) }),
       ...(row.description ? { description: row.description } : {}),
@@ -75,6 +84,9 @@ function mapSubcategory(row: SubcategoryRow): CatalogItem {
     id: row.slug,
     category: "tier-progression",
     name: row.name,
+    ...(row.card_image_url ? { cardImageUrl: row.card_image_url } : {}),
+    ...(row.card_badge ? { cardBadge: row.card_badge } : {}),
+    ...(row.card_description ? { cardDescription: row.card_description } : {}),
     price: Number(row.promo_price),
     bonusStars: row.bonus_quantity,
     ...(row.source_rank ? { sourceRank: row.source_rank } : {}),
@@ -113,7 +125,7 @@ export async function getPublicCatalog(): Promise<PublicCatalogResult> {
     const supabase = await createClient();
     const { data, error } = await supabase
       .from("categories")
-      .select("id, name, slug, description, sort_order, subcategories(id, category_id, name, slug, description, pricing_type, promo_price, original_price, unit_label, included_quantity, bonus_quantity, source_rank, target_rank, band_min, band_max, is_featured, is_active, sort_order)")
+      .select("id, name, slug, description, sort_order, subcategories(id, category_id, name, slug, description, pricing_type, promo_price, original_price, unit_label, included_quantity, bonus_quantity, source_rank, target_rank, band_min, band_max, is_featured, card_image_url, card_badge, card_description, is_active, sort_order)")
       .eq("is_active", true)
       .order("sort_order", { ascending: true })
       .order("name", { ascending: true });

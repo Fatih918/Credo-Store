@@ -39,6 +39,9 @@ function SubcategoryFields({
     band_min: number | null;
     band_max: number | null;
     is_featured: boolean;
+    card_image_url: string | null;
+    card_badge: string | null;
+    card_description: string | null;
     sort_order: number;
   };
   categories: Array<{ id: string; name: string }>;
@@ -91,8 +94,18 @@ function SubcategoryFields({
       <label className="grid gap-1 text-xs text-zinc-400">Urutan tampil
         <input name="sortOrder" type="number" min={0} max={100000} step={1} defaultValue={item?.sort_order ?? 0} className="rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-white" />
       </label>
-      <label className="grid gap-1 text-xs text-zinc-400 sm:col-span-2">Deskripsi
+      <label className="grid gap-1 text-xs text-zinc-400 sm:col-span-2">Deskripsi layanan (detail paket)
         <textarea name="description" maxLength={1000} rows={2} defaultValue={item?.description ?? ""} className="rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-white" />
+      </label>
+      <label className="grid gap-1 text-xs text-zinc-400 sm:col-span-2">Path gambar kartu (opsional)
+        <input name="cardImageUrl" maxLength={500} placeholder="/img/nama-file.png" defaultValue={item?.card_image_url ?? ""} className="rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-white" />
+        <span className="text-[11px] text-zinc-500">Gunakan file yang sudah tersedia di folder public/img. Upload file baru belum termasuk fitur ini.</span>
+      </label>
+      <label className="grid gap-1 text-xs text-zinc-400">Badge kartu (opsional)
+        <input name="cardBadge" maxLength={40} placeholder="BEST SELLER / PROMO" defaultValue={item?.card_badge ?? ""} className="rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-white" />
+      </label>
+      <label className="grid gap-1 text-xs text-zinc-400 sm:col-span-2">Deskripsi singkat kartu (opsional)
+        <textarea name="cardDescription" maxLength={240} rows={2} defaultValue={item?.card_description ?? ""} className="rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-white" />
       </label>
       <label className="flex items-center gap-2 text-sm text-zinc-300 sm:col-span-2">
         <input type="checkbox" name="isFeatured" value="true" defaultChecked={item?.is_featured ?? false} />
@@ -108,7 +121,7 @@ export default async function AdminSubcategoriesPage({ searchParams }: AdminSubc
   const supabase = await createClient();
   const [{ data: categories, error: categoriesError }, { data: subcategories, error: subcategoriesError }] = await Promise.all([
     supabase.from("categories").select("id, name").order("sort_order").order("name"),
-    supabase.from("subcategories").select("id, category_id, name, slug, description, pricing_type, promo_price, original_price, included_quantity, bonus_quantity, source_rank, target_rank, band_min, band_max, is_featured, is_active, sort_order").order("category_id").order("sort_order").order("name"),
+    supabase.from("subcategories").select("id, category_id, name, slug, description, pricing_type, promo_price, original_price, included_quantity, bonus_quantity, source_rank, target_rank, band_min, band_max, is_featured, card_image_url, card_badge, card_description, is_active, sort_order").order("category_id").order("sort_order").order("name"),
   ]);
 
   if (categoriesError || subcategoriesError) throw new Error("Unable to load catalog subcategories.");
@@ -122,8 +135,7 @@ export default async function AdminSubcategoriesPage({ searchParams }: AdminSubc
       <p className="text-sm font-semibold uppercase tracking-[0.24em] text-fuchsia-400">Catalog</p>
       <h1 className="mt-3 text-3xl font-bold tracking-tight text-white">Manajemen subkategori & harga</h1>
       <p className="mt-2 max-w-3xl text-sm leading-6 text-zinc-400">
-        Kelola layanan, harga promo, harga asli, rentang star, bonus, dan urutan tampil. Nilai harga disimpan sebagai rupiah integer.
-        Form ini mengikuti bentuk data database; jenis harga menentukan kolom mana yang digunakan.
+        Kelola layanan, harga, dan tampilan kartu publik: gambar, badge, serta deskripsi singkat. Path gambar harus menunjuk file yang sudah tersedia di public/img.
       </p>
 
       {result === "success" && <p role="status" className="mt-5 rounded-lg border border-emerald-900 bg-emerald-950/40 p-3 text-sm text-emerald-300">Perubahan subkategori berhasil disimpan.</p>}

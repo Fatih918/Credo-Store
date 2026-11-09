@@ -48,6 +48,9 @@ describe("mapPublicCatalogRows", () => {
             band_min: null,
             band_max: null,
             is_featured: false,
+            card_image_url: "/img/custom-epic.png",
+            card_badge: "PROMO",
+            card_description: "Teks kartu khusus",
             is_active: true,
             sort_order: 10,
           },
@@ -100,6 +103,9 @@ describe("mapPublicCatalogRows", () => {
         price: 40000,
         description: "Paket sepuluh star.",
         includedQuantity: 10,
+        cardImageUrl: "/img/custom-epic.png",
+        cardBadge: "PROMO",
+        cardDescription: "Teks kartu khusus",
       },
     ]);
   });
@@ -128,6 +134,9 @@ describe("mapPublicCatalogRows", () => {
         band_min: null,
         band_max: null,
         is_featured: true,
+        card_image_url: "/img/progression.png",
+        card_badge: "LIMITED",
+        card_description: "Copy progression custom",
         is_active: true,
         sort_order: 1,
       }],
@@ -141,6 +150,9 @@ describe("mapPublicCatalogRows", () => {
       sourceRank: "Epic V",
       targetRank: "Mythic",
       featured: "best-seller",
+      cardImageUrl: "/img/progression.png",
+      cardBadge: "LIMITED",
+      cardDescription: "Copy progression custom",
     });
   });
 

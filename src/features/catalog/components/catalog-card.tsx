@@ -24,6 +24,8 @@ function categoryLabel(item: CatalogItem) {
 export function CatalogCard({ item }: { item: CatalogItem }) {
   const oldPrice = originalPrice(item);
   const artwork = getRankArtwork(item);
+  const badge = item.cardBadge || (item.category === "tier-progression" && item.featured === "best-seller" ? "BEST SELLER" : null);
+  const cardDescription = item.cardDescription || (item.category === "fixed-package" ? item.description ?? (item.includedQuantity ? `Termasuk ${item.includedQuantity} unit.` : null) : item.category === "per-star" ? item.suppliedBand : `Bonus +${item.bonusStars} star`);
 
   return (
     <Link
@@ -33,8 +35,8 @@ export function CatalogCard({ item }: { item: CatalogItem }) {
       <div className="absolute -right-12 -top-12 h-36 w-36 rounded-full bg-fuchsia-500/10 blur-3xl transition group-hover:bg-fuchsia-500/20" />
       <div className="relative flex items-start justify-between gap-3">
         <span className="text-[10px] font-bold tracking-[0.2em] text-fuchsia-300">{categoryLabel(item)}</span>
-        {item.category === "tier-progression" && item.featured === "best-seller" ? (
-          <span className="rounded-full bg-fuchsia-500 px-2.5 py-1 text-[10px] font-bold text-white">BEST SELLER</span>
+        {badge ? (
+          <span className="max-w-36 rounded-full bg-fuchsia-500 px-2.5 py-1 text-[10px] font-bold text-white">{badge}</span>
         ) : null}
       </div>
       {artwork ? (
@@ -49,15 +51,7 @@ export function CatalogCard({ item }: { item: CatalogItem }) {
         </div>
       ) : null}
       <h3 className="relative mt-3 text-lg font-bold text-white">{item.name}</h3>
-      {item.category === "fixed-package" && (item.description || item.includedQuantity) ? (
-        <p className="relative mt-2 text-sm text-zinc-400">{item.description ?? `Termasuk ${item.includedQuantity} unit.`}</p>
-      ) : null}
-      {item.category === "per-star" && item.suppliedBand ? (
-        <p className="relative mt-2 text-sm text-zinc-400">{item.suppliedBand}</p>
-      ) : null}
-      {item.category === "tier-progression" ? (
-        <p className="relative mt-2 text-sm text-emerald-300">Bonus +{item.bonusStars} star</p>
-      ) : null}
+      {cardDescription ? <p className="relative mt-2 line-clamp-2 text-sm text-zinc-400">{cardDescription}</p> : null}
       <div className="relative mt-auto flex items-end justify-between gap-3 pt-7">
         <div>
           {oldPrice ? <p className="text-xs text-zinc-500 line-through">{formatRupiah(oldPrice)}{item.category === "per-star" ? " / star" : ""}</p> : null}
