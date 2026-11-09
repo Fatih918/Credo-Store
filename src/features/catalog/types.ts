@@ -3,7 +3,7 @@ export type PerStarService = {
   readonly category: "per-star";
   readonly name: string;
   readonly promoPricePerStar: number;
-  readonly originalPricePerStar: number;
+  readonly originalPricePerStar?: number;
   readonly suppliedBand?: string;
 };
 
