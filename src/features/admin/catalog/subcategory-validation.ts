@@ -48,7 +48,12 @@ export function validateSubcategoryDraft(draft: SubcategoryDraft): string[] {
     if (draft.includedQuantity !== null && (!Number.isInteger(draft.includedQuantity) || draft.includedQuantity <= 0)) errors.push("includedQuantity");
     if (draft.bonusQuantity !== 0 || draft.sourceRank || draft.targetRank || draft.bandMin !== null || draft.bandMax !== null) errors.push("fixedShape");
   } else if (draft.pricingType === "tier_progression") {
-    if (!draft.sourceRank.trim() || !draft.targetRank.trim()) errors.push("rank");
+    if (
+      !draft.sourceRank.trim() ||
+      !draft.targetRank.trim() ||
+      draft.sourceRank.length > 80 ||
+      draft.targetRank.length > 80
+    ) errors.push("rank");
     if (draft.includedQuantity !== null || draft.bandMin !== null || draft.bandMax !== null) errors.push("tierShape");
   }
 
