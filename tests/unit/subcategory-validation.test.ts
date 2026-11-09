@@ -21,6 +21,9 @@ const baseDraft: SubcategoryDraft = {
   bandMin: null,
   bandMax: null,
   isFeatured: false,
+  cardImageUrl: "",
+  cardBadge: "",
+  cardDescription: "",
   sortOrder: 10,
 };
 
@@ -54,6 +57,17 @@ describe("validateSubcategoryDraft", () => {
     expect(validateSubcategoryDraft({ ...baseDraft, promoPrice: Number.NaN })).toContain("promoPrice");
     expect(validateSubcategoryDraft({ ...baseDraft, slug: "Epic Service" })).toContain("slug");
     expect(validateSubcategoryDraft({ ...baseDraft, bandMin: 50, bandMax: 25 })).toContain("bandOrder");
+  });
+
+  it("accepts local card artwork paths and optional card copy", () => {
+    expect(validateSubcategoryDraft({ ...baseDraft, cardImageUrl: "/img/epic_rank.png", cardBadge: "PROMO", cardDescription: "Custom card copy" })).toEqual([]);
+  });
+
+  it("rejects external, traversing, or oversized card presentation values", () => {
+    expect(validateSubcategoryDraft({ ...baseDraft, cardImageUrl: "https://example.com/image.png" })).toContain("cardImageUrl");
+    expect(validateSubcategoryDraft({ ...baseDraft, cardImageUrl: "/img/../secret.png" })).toContain("cardImageUrl");
+    expect(validateSubcategoryDraft({ ...baseDraft, cardBadge: "x".repeat(41) })).toContain("cardBadge");
+    expect(validateSubcategoryDraft({ ...baseDraft, cardDescription: "x".repeat(241) })).toContain("cardDescription");
   });
 
   it("rejects fields that conflict with the selected pricing type", () => {
