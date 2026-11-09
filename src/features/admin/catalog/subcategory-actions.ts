@@ -17,6 +17,12 @@ function textValue(formData: FormData, key: string): string {
   return typeof value === "string" ? value.trim() : "";
 }
 
+function requiredInteger(value: string): number {
+  if (!value) return Number.NaN;
+  const parsed = Number(value);
+  return Number.isSafeInteger(parsed) ? parsed : Number.NaN;
+}
+
 function optionalInteger(value: string): number | null {
   if (!value) return null;
   const parsed = Number(value);
@@ -31,7 +37,7 @@ function readDraft(formData: FormData): SubcategoryDraft {
     slug: textValue(formData, "slug"),
     description: textValue(formData, "description"),
     pricingType,
-    promoPrice: Number(textValue(formData, "promoPrice")),
+    promoPrice: requiredInteger(textValue(formData, "promoPrice")),
     originalPrice: optionalInteger(textValue(formData, "originalPrice")),
     includedQuantity: optionalInteger(textValue(formData, "includedQuantity")),
     bonusQuantity: Number(textValue(formData, "bonusQuantity") || "0"),
