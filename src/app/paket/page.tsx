@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { SiteHeader } from "@/components/site-header";
 import { CatalogCard } from "@/features/catalog/components/catalog-card";
-import { catalogItems } from "@/features/catalog/data/catalog";
+import { getPublicCatalog } from "@/features/catalog/data/public-catalog";
 
 const pageDescription =
   "Jelajahi layanan per star, paket harga tetap, dan tier progression Credo Store.";
@@ -23,13 +23,9 @@ export const metadata: Metadata = {
   },
 };
 
-const groups = [
-  { title: "Layanan Per Star", description: "Pilih tier dan tentukan jumlah star pada halaman detail.", category: "per-star" },
-  { title: "Paket Harga Tetap", description: "Paket dengan harga yang sudah ditentukan.", category: "fixed-package" },
-  { title: "Tier Progression", description: "Paket perjalanan rank dengan bonus star.", category: "tier-progression" },
-] as const;
+export default async function PackagesPage() {
+  const catalog = await getPublicCatalog();
 
-export default function PackagesPage() {
   return (
     <>
       <SiteHeader />
@@ -42,22 +38,33 @@ export default function PackagesPage() {
               Pilih layanan yang sesuai dengan target kamu. Buka salah satu paket untuk melihat detail dan mengisi pesanan.
             </p>
           </div>
-          <div className="mt-10 space-y-12">
-            {groups.map((group) => {
-              const items = catalogItems.filter((item) => item.category === group.category);
-              return (
-                <section key={group.category} aria-labelledby={`group-${group.category}`}>
+
+          {catalog.status === "unavailable" ? (
+            <div role="alert" className="mt-10 rounded-2xl border border-amber-400/20 bg-amber-400/5 p-6">
+              <h2 className="font-bold text-amber-200">Katalog belum dapat dimuat</h2>
+              <p className="mt-2 text-sm leading-6 text-zinc-400">
+                Data katalog sedang tidak tersedia. Silakan muat ulang beberapa saat lagi atau hubungi toko melalui WhatsApp.
+              </p>
+            </div>
+          ) : catalog.categories.length === 0 ? (
+            <p className="mt-10 rounded-2xl border border-white/10 bg-white/[0.03] p-6 text-sm text-zinc-400">
+              Belum ada layanan aktif yang tersedia.
+            </p>
+          ) : (
+            <div className="mt-10 space-y-12">
+              {catalog.categories.map((category) => (
+                <section key={category.id} aria-labelledby={`group-${category.id}`}>
                   <div className="mb-5">
-                    <h2 id={`group-${group.category}`} className="text-xl font-bold">{group.title}</h2>
-                    <p className="mt-1 text-sm text-zinc-500">{group.description}</p>
+                    <h2 id={`group-${category.id}`} className="text-xl font-bold">{category.title}</h2>
+                    {category.description ? <p className="mt-1 text-sm text-zinc-500">{category.description}</p> : null}
                   </div>
                   <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                    {items.map((item) => <CatalogCard key={item.id} item={item} />)}
+                    {category.items.map((item) => <CatalogCard key={item.id} item={item} />)}
                   </div>
                 </section>
-              );
-            })}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </main>
       <footer className="border-t border-white/10 px-4 py-6 text-center text-xs text-zinc-500">

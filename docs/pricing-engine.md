@@ -1,9 +1,9 @@
 # Credo Store — Catalog & Pricing Engine
 
 ## Source of truth
-Catalog names, identifiers, promotional prices, original prices, supplied rank bands, package descriptions, featured status, and progression bonuses live in `src/features/catalog/data/catalog.ts`.
+Public storefront catalog names, identifiers, promotional prices, original prices, supplied rank bands, package descriptions, featured status, and progression bonuses are read from the active Supabase `categories` and `subcategories` records through `src/features/catalog/data/public-catalog.ts`.
 
-UI components must read catalog data rather than duplicate price literals.
+`src/features/catalog/data/catalog.ts` remains a static fixture/reference for pure pricing tests and existing seed verification; it is no longer the production storefront source of truth. UI components must consume the catalog item supplied by the server repository rather than duplicate price literals.
 
 ## Pricing API
 Pure functions in `src/features/pricing/pricing.ts` provide:
