@@ -64,5 +64,6 @@ const rankArtworkByPackageId: Record<string, { src: string; alt: string }> = {
 };
 
 export function getRankArtwork(item: CatalogItem) {
+  if (item.cardImageUrl) return { src: item.cardImageUrl, alt: item.name };
   return rankArtworkByPackageId[item.id] ?? null;
 }
