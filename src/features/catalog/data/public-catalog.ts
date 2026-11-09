@@ -102,11 +102,11 @@ export function mapPublicCatalogRows(rows: CategoryRow[]): PublicCatalogCategory
 }
 
 export async function getPublicCatalog(): Promise<PublicCatalogResult> {
-  if (!getSupabasePublicEnvOrNull()) {
-    return { status: "unavailable", categories: [], items: [] };
-  }
-
   try {
+    if (!getSupabasePublicEnvOrNull()) {
+      return { status: "unavailable", categories: [], items: [] };
+    }
+
     const supabase = await createClient();
     const { data, error } = await supabase
       .from("categories")
