@@ -53,9 +53,14 @@ function descriptionFor(item: CatalogItem) {
     return `Layanan penambahan star untuk tier ${item.name}. Harga dihitung berdasarkan jumlah star yang kamu masukkan pada formulir pesanan.`;
   }
   if (item.category === "fixed-package") {
-    return item.description ?? `Paket ${item.name} dengan harga tetap sesuai katalog Credo Store.`;
+    return item.description ?? (item.includedQuantity
+      ? `Paket ${item.name} termasuk ${item.includedQuantity} unit.`
+      : `Paket ${item.name} dengan harga tetap sesuai katalog Credo Store.`);
   }
-  return `Layanan progression dari ${item.name}. Paket ini mencakup bonus +${item.bonusStars} star.`;
+  const route = item.sourceRank && item.targetRank
+    ? `dari ${item.sourceRank} ke ${item.targetRank}`
+    : item.name;
+  return `Layanan progression ${route}. Paket ini mencakup bonus +${item.bonusStars} star.`;
 }
 
 export default async function PackageDetailPage({ params }: { params: Promise<{ id: string }> }) {
