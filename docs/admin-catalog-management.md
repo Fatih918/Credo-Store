@@ -13,6 +13,12 @@ Pricing field mapping:
 
 All monetary values are non-negative safe integers in IDR. The database remains the final constraint authority. The admin interface does not change the public storefront's TypeScript catalog source; database-backed public reads are a separate cutover task.
 
+## Card presentation fields
+- `card_image_url` stores a same-site path under `/img/`; external URLs and path traversal are rejected.
+- `card_badge` is optional, limited to 40 characters, and overrides the legacy Best Seller badge text when set.
+- `card_description` is optional, limited to 240 characters, and overrides the generated short card copy. The existing `description` remains the longer package-detail description.
+- The admin UI edits references to files already committed under `public/img`; image upload and Supabase Storage are not part of this change.
+
 ## Business-rule safeguards
 - The original seeded values remain unchanged until an administrator edits them.
 - No automatic cross-band price splitting is implemented.
