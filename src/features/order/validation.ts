@@ -13,8 +13,8 @@ const MAX_LENGTHS = {
 
 export function validateOrderDraft(draft: OrderDraft, catalogItem?: CatalogItem): OrderFieldErrors {
   const errors: OrderFieldErrors = {};
-  const selectedItem = catalogItem?.id === draft.catalogItemId
-    ? catalogItem
+  const selectedItem = catalogItem
+    ? (catalogItem.id === draft.catalogItemId ? catalogItem : undefined)
     : catalogItems.find((item) => item.id === draft.catalogItemId);
 
   if (!selectedItem) errors.catalogItemId = "Pilih layanan yang tersedia.";
