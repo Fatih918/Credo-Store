@@ -50,6 +50,9 @@ function readDraft(formData: FormData): SubcategoryDraft {
     bandMin: pricingType === "per_star" ? optionalInteger(textValue(formData, "bandMin")) : null,
     bandMax: pricingType === "per_star" ? optionalInteger(textValue(formData, "bandMax")) : null,
     isFeatured: textValue(formData, "isFeatured") === "true",
+    cardImageUrl: textValue(formData, "cardImageUrl"),
+    cardBadge: textValue(formData, "cardBadge"),
+    cardDescription: textValue(formData, "cardDescription"),
     sortOrder: Number(textValue(formData, "sortOrder") || "0"),
   };
 }
@@ -78,6 +81,9 @@ function toDatabaseRow(draft: SubcategoryDraft) {
     band_min: draft.pricingType === "per_star" ? draft.bandMin : null,
     band_max: draft.pricingType === "per_star" ? draft.bandMax : null,
     is_featured: draft.isFeatured,
+    card_image_url: draft.cardImageUrl || null,
+    card_badge: draft.cardBadge || null,
+    card_description: draft.cardDescription || null,
     sort_order: draft.sortOrder,
   };
 }
